@@ -1,0 +1,1289 @@
+```{r include = FALSE}
+if(!knitr:::is_html_output())
+{
+  options("width"=56)
+  knitr::opts_chunk$set(tidy.opts=list(width.cutoff=56, indent = 2), tidy = TRUE)
+  knitr::opts_chunk$set(fig.pos = 'H')
+}
+```
+
+# Análisis exploratorio de datos {#analisis_exploratorio_de_datos}
+
+Escuchando a los números :)
+
+## Análisis numérico, La voz de los números {#analisis_numerico}
+
+
+```{r echo=FALSE, out.width="100px"}
+knitr::include_graphics("exploratory_data_analysis/Galeano.jpg")
+```
+
+> "La voz de los números" -- una metáfora de [Eduardo Galeano](https://es.wikipedia.org/wiki/Eduardo_Galeano). Escritor y novelista.
+
+Los datos que exploramos podrían ser como jeroglíficos egipcios sin una interpretación correcta. El análisis numérico es el primer paso de una serie de etapas iterativas en la búsqueda de lo que los datos nos quieren decir, si somos lo suficientemente pacientes para escucharlos. 
+
+Este capitulo abarcará, con unas pocas funciones, el análisis numérico completo de datos. Esto debería ser el primer paso en cualquier proyecto de datos, donde comenzamos sabiendo cuáles son los tipos correctos de datos y exploramos las distribuciones de variables numéricas y categóricas.
+
+También se enfocará en la extracción de conclusiones semánticas, que será útil a la hora de escribir informes para audiencias no especializadas.
+
+**¿Qué vamos a repasar en este capítulo? **
+
+* **Estado de salud de un conjunto de datos**:  
+    + Obtener métricas como el número total de filas, columnas, tipos de datos, ceros, y valores faltantes
+    + Cómo cada uno de los ítems mencionados impactan sobre diferentes análisis
+    + Cómo filtrar y operar rápidamente sobre (y con) ellos para limpiar los datos
+* **Análisis univariado en una variable categórica**: 
+    + Frecuencia, porcentaje, valor acumulativo, y gráficos coloridos
+* **Análisis univariado con variables numéricas**: 
+    + Percentil, dispersión, desvío estándar, promedio, valores máximos y mínimos 
+    + Percentil vs. cuantil vs. cuartil
+    + Curtosis, asimetría, rango intercuartil, coeficiente de variación
+    + Gráficos de distribuciones
+    + **Estudio de caso completo** basado en _"Data World"_, preparación de datos, y análisis de datos
+
+<br>
+
+Repaso de funciones utilizadas en el capítulo:
+
+* `df_status(data)`: Análisis de la estructura del conjunto de datos
+* `describe(data)`:  Análisis numérico y categórico (cuantitativo)
+* `freq(data)`: Análisis categórico (cuantitativo y gráfico)
+* `profiling_num(data)`: Análisis para variables numéricas (cuantitativas)
+* `plot_num(data)`: Análisis para variables numéricas (gráficos)
+
+Note: `describe` se encuentra en el paquete `Hmisc` mientras que el resto de las funciones se encuentran en `funModeling.`
+
+
+<br>
+
+### Estado de salud de un conjunto de datos {#estado-de-salud-de-un-conjunto-de-datos}
+
+La cantidad de ceros, NA, Inf, valores únicos al igual que el tipo de datos puede llevar a un buen o mal modelo. Aquí, un acercamiento al primer paso del modelado de datos.
+
+Primero, vamos a cargar las bibliotecas `funModeling` y `dplyr`.
+
+```{r, results="hide", message=FALSE, warning=FALSE}
+# ¡Cargar funModeling!
+library(funModeling)
+library(dplyr)
+data(heart_disease)
+```
+
+#### Buscar valores faltantes, ceros, tipos de datos y valores únicos
+
+Probablemente uno de los primeros pasos, cuando recibimos un nuevo conjunto de datos para analizar, es verificar si existen valores faltantes (`NA` en **R**) y el tipo de datos.
+
+La función `df_status` incluida en `funModeling` nos puede ayudar mostrándonos estas cifras en valores relativos y porcentuales. También obtiene las estadísticas de infinitos y ceros.
+
+
+```{r df-status, eval=FALSE}
+# Analizar los datos ingresados
+df_status(heart_disease)
+```
+
+```{r profiling-data-in-r, echo=FALSE, fig.cap="Estado de salud de un conjunto de datos", out.extra=""}
+knitr::include_graphics("exploratory_data_analysis/dataset_profiling.png")
+```
+
+
+
+* `q_zeros`: cantidad de ceros (`p_zeros`: en porcentaje)
+* `q_inf`:  cantidad de valores infinitos (`p_inf`: en porcentaje)
+* `q_na`:  cantidad de NA (`p_na`: en porcentaje)
+* `type`: factor o numérico
+* `unique`: cantidad de valores únicos
+
+#### ¿Por qué son importantes estas métricas?
+
+* **Ceros**: Las variables con **muchos ceros** pueden no ser útiles para modelar y, en algunos casos, pueden sesgar dramáticamente el modelo.
+* **NA**: Varios modelos excluyen automáticamente las filas que tienen valores NA (**random forest** por ejemplo). En consecuencia, el modelo final puede resultar sesgado debido a varias filas faltantes por una sola variable. Por ejemplo, si los datos contienen tan sólo una de las 100 variables con el 90% de datos NA, el modelo se ejecutará con sólo el 10% de las filas originales. 
+* **Inf**: Los valores infinitos pueden ocasionar un comportamiento inesperado en algunas funciones en R.
+* **Type**: Algunas variables están codificadas como números, pero son códigos o categorías y los modelos **no las manejan** de la misma manera.
+* **Unique**: Las variables factor/categóricas con un alto número de valores diferentes (~30) tienden a sobreajustar si las categorías tienen una baja cardinalidad (**árboles de decisión,** por ejemplo).
+
+
+<br>
+
+
+#### Filtrar casos no deseados
+
+La función `df_status` toma un data frame y genera una _tabla de estado_ que nos puede ayudar a quitar rápidamente atributos (o variables) en base a todas las métricas descriptas en la sección anterior. Por ejemplo:
+
+
+**Quitar variables con un _alto número_ de ceros**
+
+```{r profiling-data}
+# Analizar los datos ingresados
+my_data_status=df_status(heart_disease, print_results = F)
+
+# Quitar las variables que tienen un 60% de valores cero
+vars_to_remove=filter(my_data_status, p_zeros > 60)  %>% .$variable
+vars_to_remove
+
+# Conservar todas las columnas excepto aquellas presentes en el vector 'vars_to_remove'
+heart_disease_2=select(heart_disease, -one_of(vars_to_remove))
+```
+
+
+**Ordenar datos según el porcentaje de ceros**
+
+```{r profiling-data-2}
+arrange(my_data_status, -p_zeros) %>% select(variable, q_zeros, p_zeros)
+```
+
+<br>
+
+El mismo razonamiento aplica cuando queremos quitar (o conservar) aquellas variables que estén por encima o por debajo de determinado umbral. Por favor revisen el capítulo de valores faltantes para obtener más informaación sobre las implicancias de trabajar con variables que contienen valores faltantes.
+
+<br>
+
+#### Profundizar en estos temas
+
+Los valores que devuelve la función `df_status` son abordados en profundidad en otros capítulos:
+
+* **Valores faltantes** el tratamiento, análisis e imputación de (NA) son abordados en el capítulo [Datos faltantes](#datos_faltantes).
+* **Tipos de datos**, las conversiones e implicancias de trabajar con distintos tipos de datos y más temas son abordados en el capítulo  [Tipos de datos](#tipos_de_datos).
+* Un alto número de **valores únicos** es sinónimo de variables de alta cardinalidad. Estudiamos esta situación en los siguientes capítulos:
+    + [Variables de alta cardinalidad en estadística descriptiva](#alta_cardinalidad_estadistica_descriptiva)
+    + [Variables de alta cardinalidad en modelado predictivo](#alta_cardinalidad_modelo_predictivo)
+    
+<br>
+
+#### Obtener otras estadísticas comunes: **cantidad total de filas**, **cantidad total de columnas** y **nombres de columnas**:
+
+```{r}
+# Cantidad total de filas
+nrow(heart_disease)
+
+# Cantidad total de columnas
+ncol(heart_disease)
+
+# Nombres de columnas
+colnames(heart_disease)
+```
+
+<br>
+
+---
+
+### Análisis de variables categóricas {#analisis-variables-categoricas}
+
+_Asegúrense de tener la última version de 'funModeling' (>= 1.6)._
+
+La función `freq` simplifica el análisis de frecuencia o distribución. Dicha función vuelca la distribución en una tabla y en un gráfico (por defecto) y muestra la distribución de números absolutos y relativos.
+
+Si desean obtener la distribución de dos variables:
+
+```{r frequency-analysis-r, fig.height=3, fig.width=5, fig.cap=c('Análisis de frecuencia 1','Análisis de frecuencia 2'), out.extra = ""}
+freq(data=heart_disease, input = c('thal','chest_pain'))
+```
+
+Al igual que en las demás funciones de `funModeling`, si falta `input`, entonces la función se ejecutará para todas las variables factor o de carácter que estén presentes en un data frame dado:
+
+```{r profiling-categorical-variable-4, eval=F}
+freq(data=heart_disease)
+```
+ 
+
+Si sólo queremos obtener la tabla sin el gráfico, entonces configuramos el parámetro `plot` como `FALSE`.
+El ejemplo `freq` también puede trabajar con una **variable singular**. 
+Por _defecto_, los valores `NA` **son considerados** tanto en la tabla como en el gráfico. Si es necesario excluir los valores `NA`, entonces ingresen `na.rm = TRUE`.
+Verán ambos ejemplos a continuación: 
+
+```{r profiling-categorical-variable-5, eval=F}
+freq(data=heart_disease$thal, plot = FALSE, na.rm = TRUE)
+```
+
+Si sólo se brinda una variable, entonces `freq` generará la tabla; por lo tanto, es fácil realizar algunos cálculos en base a las variables que brinda.
+
+* Por ejemplo, para visualizar las categorías que representan la mayor parte del 80% (en base a `cumulative_perc < 80`). 
+* Para obtener las categorías que pertenecen a la **cola larga**, es decir, filtrando por `percentage < 1` e identificando aquellas categorías que aparecen menos del 1% de las veces.
+
+Además, al igual que con las demás funciones para graficar que están incluidas en el paquete, si es necesario exportar gráficos, agreguen el parámetro `path_out`, que creará la carpeta si aún no ha sido creada.
+
+```{r, eval=F}
+freq(data=heart_disease, path_out='my_folder')
+```
+
+##### Análisis
+
+Los resultados están ordenados según la variable `frequency`, que rápidamente analiza las categorías con mayor frecuencia y qué porcentaje representan (variable `cummulative_perc`). En términos generales, a los seres humanos nos gusta el orden. Si las variables no están ordenadas, nuestros ojos empiezan a moverse por todas las barras para compararlas y nuestros cerebros ubican cada barra en relación a las demás.
+
+Comprueben la diferencia entre los mismos datos ingresados, primero sin ordenar y luego ordenados:
+
+
+```{r univariate-analysis, echo=FALSE, fig.cap="Orden y belleza", out.extra = ''}
+knitr::include_graphics("exploratory_data_analysis/profiling_text_variable-bw.png")
+```
+
+En general, suele haber unas pocas categorías que aparecen la mayor parte del tiempo. 
+
+Pueden encontrar un análisis más completo en [Variables de alta cardinalidad en estadística descriptiva](#alta_cardinalidad_estadistica_descriptiva)
+
+
+<br>
+
+#### Introduciendo la función `describe` 
+
+Esta función está incluida en el paquete `Hmisc` y nos permite analizar rápidamente un conjunto de datos completo para variables númericas y categóricas. En este caso, seleccionaremos sólo dos variables y analizaremos el resultado.
+
+```{r}
+# Conservar solamente las dos variables que utilizaremos en este ejemplo
+heart_disease_3=select(heart_disease, thal, chest_pain)
+
+# ¡Analizar los datos!
+describe(heart_disease_3)
+```
+
+Donde: 
+
+* `n`: cantidad de filas que no son `NA`. En este caso, indica que hay `301` pacientes que contienen un número.
+* `missing`: cantidad de valores faltantes. Al sumar este indicador y `n`, obtenemos la cantidad total de filas.
+* `unique`: cantidad de valores únicos (o distintos).
+
+El resto de la información es bastante similar a la función `freq` e indica entre paréntesis el número total en valores relativos y absolutos para cada categoría diferente.
+
+<br>
+
+---
+
+### Análisis de variables numéricas
+
+Esta sección se divide en dos partes:
+
+* Parte 1: Introducción al caso de estudio "World Data"
+* Parte 2: Hacer el análisis numérico en R
+
+Si no desean saber cómo se calcula la etapa de preparación de datos de Data World, pueden saltar a "Parte 2: Haciendo el análisis numérico en R", cuando el análisis comenzó.
+
+#### Parte 1: Introducción al caso de estudio "World Data"
+
+Este estudio contiene muchos indicadores sobre el desarrollo mundial. Independientemente del ejemplo de análisis numérico, la idea es proveer una tabla lista para usar para sociólogos, investigadores, etc. interesados en analizar este tipo de datos.
+
+La fuente original de los datos es: [http://databank.worldbank.org](http://databank.worldbank.org/data/reports.aspx?source=2&Topic=11#). Allí encontrarán un diccionario de datos que explica todas las variables.
+
+Primero, tenemos que hacer una limpieza de datos. Vamos a conservar el valor más reciente de cada indicador.
+
+```{r}
+library(Hmisc)
+
+# Cargar datos desde el repositorio de libros sin alterar el formato
+data_world=read.csv(file = "https://goo.gl/2TrDgN", header = T, stringsAsFactors = F, na.strings = "..")
+
+# Excluir los valores faltantes en Series.Code. Los datos descargados de la página web contienen cuatro líneas con "free-text" en la parte inferior del archivo.
+data_world=filter(data_world, Series.Code!="")
+
+# La función mágica que conserva los valores más recientes de cada métrica. Si no están familiarizados con R, entonces salten esta parte.
+max_ix<-function(d) 
+{
+  ix=which(!is.na(d))
+  res=ifelse(length(ix)==0, NA, d[max(ix)])
+  return(res)
+}
+
+data_world$newest_value=apply(data_world[,5:ncol(data_world)], 1, FUN=max_ix)
+
+# Visualizar las primeras tres filas
+head(data_world, 3)
+```
+
+Las columnas `Series.Name` y `Series.Code` son los indicadores a analizar.
+`Country.Name` y `Country.Code` son los países. Cada fila representa una combinación única de país e indicador.
+Las columnas restantes, `X1990..YR1990.` (año 1990),`X2000..YR2000.` (año 2000), `X2007..YR2007.` (año 2007), y sucesivamente indican el valor de cada métrica para ese año, cada columna corresponde a un año. 
+
+<br>
+
+
+#### Tomar decisiones como científicos de datos
+
+Hay muchas celdas `NAs` porque algunos países no cuentan con las mediciones de los indicadores en esos años. En este punto, debemos **tomar una decisión** como científicos de datos. Probablemente no tomemos la decisión óptima si no consultamos con un experto, por ejemplo, un sociólogo.
+
+¿Qué hacemos con los valores `NA`? En este caso, vamos a conservar el **valor más reciente** para todos los indicadores. Quizás esta no sea la mejor manera de extraer conclusiones para un _paper_ académico, ya que vamos a comparar algunos países que cuentan con información actualizada al 2016 con países cuyos datos fueron actualizados por última vez en el 2009. Comparar todos los indicadores con los datos más recientes es un enfoque apropiado para un primer análisis.
+
+Otra solución podría haber sido conservar el valor más reciente solamente si este es de los últimos cinco años. Esto reduciría la cantidad de países a analizar.
+
+Estas preguntas son imposibles de responder para un _sistema de inteligencia artificial_, no obstante la decisión puede influir drásticamente en los resultados.
+
+**La última transformación**
+
+El próximo paso convertirá la última tabla de formato _largo_ a _ancho_. En otras palabras, cada fila representará un país y cada columna un indicador (gracias a la última transformación que tiene el _valor más reciente_ para cada combinación de indicador-país).
+
+Los nombres de los indicadores son poco claros, por lo que "traduciremos" algunos de ellos.
+
+```{r, tidy=FALSE}
+# Obtener la lista de descripciones de indicadores.
+names=unique(select(data_world, Series.Name, Series.Code))
+head(names, 5)
+
+# Convertir algunos
+df_conv_world=data.frame(
+  new_name=c("urban_poverty_headcount", 
+             "rural_poverty_headcount", 
+             "gini_index", 
+             "pop_living_slums",
+             "poverty_headcount_1.9"), 
+  Series.Code=c("SI.POV.URHC", 
+                "SI.POV.RUHC",
+                "SI.POV.GINI",
+                "EN.POP.SLUM.UR.ZS",
+                "SI.POV.DDAY"), 
+  stringsAsFactors = F)
+
+# Agregar el nuevo valor del indicador
+data_world_2 = left_join(data_world, 
+                         df_conv_world, 
+                         by="Series.Code", 
+                         all.x=T)
+
+data_world_2 = 
+  mutate(data_world_2, Series.Code_2=
+           ifelse(!is.na(new_name), 
+                  as.character(data_world_2$new_name), 
+                  data_world_2$Series.Code)
+         )
+```
+
+El significado de cualquiera de los indicadores puede cotejarse en data.worldbank.org. Por ejemplo, si queremos saber qué significa `EN.POP.SLUM.UR.ZS`, ingresamos a: http://data.worldbank.org/indicator/EN.POP.SLUM.UR.ZS
+
+
+```{r, warning=FALSE}
+# El paquete 'reshape2' contiene tanto la función 'dcast' como 'melt'
+library(reshape2)
+
+data_world_wide=dcast(data_world_2, Country.Name  ~ Series.Code_2, value.var = "newest_value")
+```
+
+Nota: Para entender más acerca de los formatos `largo` y `ancho` utilizando el paquete `reshape2`, y cómo convertir de uno a otro, por favor diríjanse a:  http://seananderson.ca/2013/10/19/reshape.html.
+
+Ahora tenemos la tabla final para analizar:
+
+```{r}
+# Visualizar las primeras tres filas
+head(data_world_wide, 3)
+```
+
+
+<br>
+
+#### Parte 2: Hacer el análisis numérico en R {#analisis-numerico-en-r}
+
+Utilizaremos las siguientes funciones:
+
+* `describe` de `Hmisc`
+* `profiling_num` (análisis univariado completo), y `plot_num` (histogramas) de `funModeling`
+
+
+Seleccionaremos solamente dos variables como ejemplo:
+
+```{r}
+library(Hmisc) # contiene la función `describe`
+
+vars_to_profile=c("gini_index", "poverty_headcount_1.9")
+data_subset=select(data_world_wide, one_of(vars_to_profile))
+
+# Utilizar la función `describe` en con junto de datos completo. 
+# Puede ejecutarse con una variable; por ejemplo, describe(data_subset$poverty_headcount_1.9)
+
+describe(data_subset)
+```
+
+
+Tomando `poverty_headcount_1.9` (_Índice de pobreza de US$1.90 por día es el porcentaje de la población que vive con menos de US$1.90 por día a precios internacionales de 2011._), lo podemos describir como:
+
+* `n`: cantidad de filas que no son `NA`. En este caso, indica que hay `116` países que contienen un número.
+* `missing`: cantidad de valores faltantes. Al sumar este indicador y `n`, obtenemos la cantidad total de filas. Casi la mitad de los países no tienen datos. 
+* `unique`: cantidad de valores únicos (o distintos).
+* `Info`: un estimador de la cantidad de información presente en la variable y que no es importante en este punto.
+* `Mean`: el clásico promedio o media.
+* Números: `.05`, `.10`, `.25`, `.50`, `.75`, `.90` y `.95 ` son percentiles. Estos valores son muy útiles ya que nos ayudan a describir la distribución. Cubriremos este tema en profundidad más adelante, pero, por ejemplo, `.05` es el 5to percentil.
+* `lowest` y `highest`: los cinco valores mínimos/máximos. Aquí podemos detectar valores atípicos y errores de datos. Por ejemplo, si la variable representa un porcentaje, entonces no puede contener valores negativos.
+
+<br>
+
+La siguiente función es `profiling_num`, que toma un data frame y devuelve una _gran_ tabla en la que es fácil sentirse abrumado por un _mar de métricas_. Es similar a lo que vemos en la película _Matrix_.
+
+
+```{r matrix-movie, out.width="150px", echo=FALSE, fig.cap="La matrix de datos", out.extra = ""}
+knitr::include_graphics("exploratory_data_analysis/matrix_movie.png")
+```
+
+_Imagen de la película "Matrix" (1999), dirigida por las hermanas Wachowski._
+
+
+
+La idea de la siguiente tabla es brindarle al usuario un **conjunto completo de métricas** para que él o ella pueda decidir cuáles utilizar para el estudio.
+
+Nota: Detrás de cada métrica hay mucha teoría estadística. Aquí cubriremos solamente un enfoque acotado y **muy simplificado** para introducir los conceptos.
+
+
+```{r}
+library(funModeling)
+
+# El análisis numérico completo de una función automáticamente excluye las variables no numéricas
+profiling_num(data_world_wide)
+```
+
+Cada indicador tiene su _raison d’être_:
+
+* `variable`: nombre de la variable
+
+* `mean`: el famoso promedio o media
+
+* `std_dev`: desvío estándar, una medida de **dispersión** o **extensión** con respecto al valor promedio. Un valor cerca de `0` indica que casi no hay variación (por lo que parece más una constante); por otro lado, es más difícil definir qué sería un valor _alto_, pero podemos decir que a mayor variación, mayor dispersión.
+_El caos se asemeja a un desvío estándar de valor infinito_. La unidad es la misma que la del promedio para que puedan compararse.
+
+* `variation_coef`: coeficiente de variación=`std_dev`/`mean`. Dado que el `std_dev` es un valor absoluto, es bueno tener un indicador que lo exprese en un valor relativo, comparando el `std_dev` contra el `mean` Un valor de `0.22` indica que el `std_dev` es el 22% del `mean`. Si estuviera cerca de `0` entonces la variable estaría más centrada cerca del promedio. Si comparamos dos clasificadores, entonces es probable que prefiramos el que tenga menores `std_dev` y `variation_coef` por su precisión.
+
+* `p_01`,    `p_05`,    `p_25`,    `p_50`,    `p_75`,    `p_95`,    `p_99`: **Percentiles** en 1%, 5%, 25%, y así sucesivamente. Encontrarán un repaso completo sobre percentiles más adelante en este capítulo.
+
+Para leer una explicación completa sobre percentiles, por favor diríjanse a: [Anexo 1: La magia de los percentiles ](#apendice-percentiles).
+
+* `skewness`: es una medida de _asimetría_. Un valor cercano a **0** indica que la distribución de los datos es _igual_ hacia ambos lados (o simétrica) con respecto al promedio. Un **valor positivo** implica una larga cola hacia la derecha, mientras que un **valor negativo** significa lo opuesto.
+
+Después de esta sección, revisen la asimetría en los gráficos. La variable `pop_living_slums` está cerca de 0 ("igualmente" distribuida), `poverty_headcount_1.9` es positiva (cola hacia la derecha), y `SI.DST.04TH.20` es negativa (cola hacia la izquierda). Cuanto más lejos esté la asimetría de 0, más probable es que la distribución tenga **valores atípicos**. 
+
+* `kurtosis`: describe las **colas** de la distribución; dicho en términos simples, un número alto puede indicar la presencia de valores atípicos (tal como veremos más adelante para la variable `SI.POV.URGP` que tiene un valor atípico cerca de `50`).
+Para leer un repaso completo de asimetría y curtosis, diríjanse a las Referencias [@skew_kurt_1] y [@skew_kurt_2].
+
+* `iqr`:  el rango intercuartil es el resultado de observar los percentiles `0.25` y `0.75`, e indica, en la misma unidad de la variable, el largo de dispersión del 50% de los valores. Cuanto mayor sea el valor, más dispersa es la variable.
+
+* `range_98` y `range_80`: indican el rango en el que el se encuentra el `98%` de los valores. Quita el 1% inferior y superior (ergo, el número `98%`). Es bueno saber cuál es el rango de la variable sin valores atípicos potenciales. Por ejemplo, `pop_living_slums` va de `0` a `76.15`. Es **más robusto** que comparar los valores **mínimos** y **máximos**.
+`range_80` es igual que `range_98` pero sin el `10%` inferior y superior.
+
+`iqr`, `range_98` y `range_80` están basados en percentiles, que cubriremos más adelante en este capítulo.
+
+**Importante**: Todas las métricas se calculan quitando los valores `NA`. De lo contrario, la tabla estaría llena de NAs.
+
+<br>
+
+##### Consejos para utilizar `profiling_num`
+
+La idea de la función `profiling_num` es proveer al científico de datos un conjunto completo de métricas para que pueda seleccionar las más relevantes. Esto se puede hacer fácilmente utilizando la función `select` del paquete `dplyr`. 
+
+Además, debemos configurar en `profiling_num` el parámetro `print_results = FALSE`. De esta forma, evitamos visualizar en la consola.
+
+Por ejemplo, probemos con `mean`,  `p_01`,  `p_99` y `range_80`:
+
+```{r}
+my_profiling_table=profiling_num(data_world_wide, print_results = FALSE) %>% select(variable, mean, p_01, p_99, range_80)
+
+# Visualizar sólo las primeras tres filas
+head(my_profiling_table, 3)
+```
+
+Noten que `profiling_num` devuelve una tabla, por lo que podemos filtrar rápidamente los casos de acuerdo a las condiciones que definamos.
+
+<br> 
+
+##### Analizar variables numéricas utilizando gráficos {#graficar-variables-numericas}
+
+Otra función de `funModeling` es `plot_num`, que toma un conjunto de datos y grafica la distribución de cada variable numérica excluyendo automáticamente las variables no numéricas:
+
+```{r, profiling-numerical-variable-with-histograms, fig.cap="Analizando datos numéricos", out.extra = ''}
+plot_num(data_world_wide)
+```
+
+Podemos ajustar la cantidad de barras del gráfico cambiando el parámetro `bins` (por defecto está configurado en 10). Por ejemplo: `plot_num(data_world_wide, bins = 20)`.
+
+
+---
+
+<br>
+
+### Reflexiones finales
+ 
+Hasta aquí, han aparecido muchos números, _y aún más en el apéndice de percentiles_. Lo importante es que encuentren el enfoque adecuado para explorar sus datos. Puede estar relacionado con las métricas o con otros criterios.
+
+Las funciones `df_status`,  `describe`, `freq`, `profiling_num` y `plot_num` pueden ejecutarse al principio de un proyecto de datos.
+
+Con respecto al **comportamiento normal y anormal** de los datos, es importante estudiar ambos. Para describir un conjunto de datos en términos generales, deberíamos excluir los valores extremos: por ejemplo, con la variable `range_98`. El promedio debería disminuir después de la exclusión.
+
+Estos análisis son **univariados**; es decir, no tienen en cuenta otras variables (análisis **multivariado**). Esto estará incluido en este libro más adelante. Mientras tanto, para encontrar la correlación entre variables ingresadas (y de resultados), pueden dirigirse al capítulo de [Correlación](#correlacion).
+
+
+<br>
+
+---
+
+```{r echo=FALSE}
+knitr::include_graphics("introduction/spacer_bar.png")
+```
+
+---
+
+<br>
+
+
+## Correlación y relación {#correlacion}
+
+```{r manderbolt-fractal,echo=FALSE, out.width="150px"}
+knitr::include_graphics("exploratory_data_analysis/fractal_manderbolt.png")
+```
+
+_Fractal de Mandelbrot, donde el caos expresa su belleza; fuente de la imagen: Wikipedia._ 
+
+<br>
+
+### ¿De qué se trata esto?
+
+Este capítulo contiene aspectos metodológicos y prácticos de la medición de correlación en variables. Veremos que la palabra _correlación_ puede traducirse en "**relación funcional**".
+
+En metodología encontrarán el Cuarteto de Anscombe, un conjunto de cuatro gráficos con distribuciones espaciales diferentes, pero que comparten la misma medida de correlación. Iremos un paso más allá recalculando su relación a través de una métrica más robusta (Coeficiente de Información Máxima o MIC, por sus siglas en inglés).
+
+Mencionaremos **Teoría de la Información** varias veces; aunque por ahora la cubriremos a nivel matemático, está previsto hacerlo. Muchos algoritmos se basan en ella, incluso el aprendizaje profundo (deep learning).
+
+Entender estos conceptos en dimensiones bajas (dos variables) y datos pequeños (un grupo de filas) nos permite entender mejor los datos de alta dimensión. No obstante, algunos casos reales son sólo datos _pequeños_.
+
+Desde el punto de vista práctico, podrán replicar el análisis con sus propios datos, analizando numéricamente y exponiendo sus relaciones en gráficos sofisticados.
+
+
+<br>
+
+
+Empecemos por cargar todas las bibliotecas que necesitaremos.
+
+```{r lib, message=F, results="hide", warning=FALSE, tidy=FALSE}
+# Cargar las bibliotecas necesarias
+library(funModeling) # contiene datos de heart_disease
+library(minerva) # contiene estadístico MIC 
+library(ggplot2)
+library(dplyr)
+library(reshape2) 
+library(gridExtra) # nos permite realizar 
+# dos gráficos en una fila
+options(scipen=999) # desactiva la notación científica
+```
+<br>
+
+### Correlación lineal {#correlacion-lineal}
+
+Quizás la medida de correlación más estándar para las variables numéricas es la `R statistic` (o coeficiente de Pearson) que va desde `1` _correlación positiva_ hasta `-1` _correlación negativa_. Un valor alrededor de `0` implica que no hay correlación.
+
+Consideren el ejemplo siguiente, que calcula la medida R basada en una variable de destino (por ejemplo, para realizar la ingeniería de factores). La función `correlation_table` obtiene la métrica R de todas las variables numéricas omitiendo las categóricas/nominales.
+
+```{r}
+correlation_table(data=heart_disease, target="has_heart_disease")
+```
+La variable `heart_disease_severity` es la variable -numérica- más importante; cuanto mayor sea su valor, mayores serán las probabilidades de padecer una enfermedad cardíaca (correlación positiva). Lo contrario de `max_heart_rate`, que tiene una correlación negativa.
+
+Al elevar este número al cuadrado obtenemos la estadística `R-squared` (también conocida como R cuadrado o `R2`), que va desde `0` _no hay correlación_ hasta `1` _alta correlación_. 
+
+El estadístico R está profundamente influenciado por los **valores atípicos** y las relaciones **no lineales**.
+
+<br>
+
+#### Correlación en el Cuarteto de Anscombe
+
+Observen el **Cuarteto de Anscombe**, citando a [Wikipedia](https://en.wikipedia.org/wiki/Anscombe%27s_quartet):
+
+> Fueron construidos en 1973 por el estadístico Francis Anscombe para demostrar tanto la importancia de graficar los datos antes de analizarlos como el efecto de los valores atípicos sobre las propiedades estadísticas.
+
+1973 y sigue vigente hoy, es fantástico.
+
+Estas cuatro relaciones son diferentes, pero todas tienen la misma R2: `0.816`.
+
+El siguiente ejemplo calcula el R2 y grafica cada par.
+
+```{r anscombe-data, message=FALSE, tidy=FALSE, fig.cap="Conjunto de Anscombe", out.extra = ''}
+# Leer los datos del Cuarteto de Anscombe
+anscombe_data = 
+  read.delim(file="https://goo.gl/mVLz5L", header = T)
+
+# Calcular la correlación (R cuadrado o R2) para 
+#cada par, los valores son el mismo: 0.86.
+cor_1 = cor(anscombe_data$x1, anscombe_data$y1)
+cor_2 = cor(anscombe_data$x2, anscombe_data$y2)
+cor_3 = cor(anscombe_data$x3, anscombe_data$y3)
+cor_4 = cor(anscombe_data$x4, anscombe_data$y4)
+
+# Definir la función
+plot_anscombe <- function(x, y, value, type)
+{
+  # 'anscombe_data' es una variable global, esto es
+  # una mala práctica de programación ;)
+  p=ggplot(anscombe_data, aes_string(x,y))  + 
+    geom_smooth(method='lm', fill=NA) + 
+    geom_point(aes(colour=factor(1), 
+                   fill = factor(1)), 
+               shape=21, size = 2
+               ) + 
+    ylim(2, 13) + 
+    xlim(4, 19) + 
+    theme_minimal() + 
+    theme(legend.position="none") + 
+    annotate("text", 
+             x = 12, 
+             y =4.5, 
+             label = 
+               sprintf("%s: %s", 
+                       type, 
+                       round(value,2)
+                       )
+             )  
+  
+  return(p)
+}
+
+# Graficar en una cuadrícula de 2x2
+grid.arrange(plot_anscombe("x1", "y1", cor_1, "R2"), 
+             plot_anscombe("x2", "y2", cor_2, "R2"), 
+             plot_anscombe("x3", "y3", cor_3, "R2"), 
+             plot_anscombe("x4", "y4", cor_4, "R2"), 
+             ncol=2, 
+             nrow=2)
+```
+
+4 gráficos diferentes, con el mismo `mean` para cada variable `x` y `y` (9 y 7.501, respectivamente), y el mismo grado de correlación. Pueden comprobar todas las medidas ingresando `summary(anscombe_data)`. 
+
+Por esto es tan importante graficar relaciones cuando se analizan las correlaciones.
+
+Volveremos sobre estos datos más tarde. ¡Se pueden mejorar! Primero, introduciremos algunos conceptos de la Teoría de la Información.
+
+<br>
+
+### Correlación basada en la Teoría de la Información
+
+Estas relaciones pueden medirse mejor con conceptos de la [Teoría de la Información](https://es.wikipedia.org/wiki/Teor%C3%ADa_de_la_informaci%C3%B3n). Uno de los muchos algoritmos que se utilizan para medir la correlación basada en esto es **MINE**, una sigla que significa Maximal Information-based nonparametric exploration, en inglés.
+
+Pueden encontrar la implementación en R en el paquete [minerva](https://cran.r-project.org/web/packages/minerva/index.html). También está disponible en otros lenguajes, como Python.
+
+<br>
+
+#### Ejemplo en R: Una relación perfecta
+
+Grafiquemos una relación no lineal, basada directamente en una función (exponencial negativa), y visualicemos el valor MIC.
+
+```{r mic-non-linear-relationship, message=FALSE, fig.width=4, fig.height=3, fig.cap="Una relación perfecta", out.extra = ''}
+x=seq(0, 20, length.out=500)
+df_exp=data.frame(x=x, y=dexp(x, rate=0.65))
+ggplot(df_exp, aes(x=x, y=y)) + geom_line(color='steelblue') + theme_minimal()
+
+# La posición [1,2] contiene la correlación de ambas variables, excluyendo la medida de correlación de cada variable con respecto a sí misma.
+
+# Calcular la correlación lineal
+res_cor_R2=cor(df_exp)[1,2]^2
+sprintf("R2: %s", round(res_cor_R2,2))
+
+# Ahora computamos la métrica MIC
+res_mine=mine(df_exp)
+sprintf("MIC: %s", res_mine$MIC[1,2])
+```
+
+Los valores de **MIC** van de 0 a 1. Cuando es 0, implica que no hay correlación y 1 implica la mayor correlación posible. La interpretación de los valores es la misma que para R cuadrado.
+
+<br>
+
+#### Análisis de los resultados
+
+`MIC=1` indica que hay una correlación perfecta entre dos variables. Si estamos haciendo **ingeniería de factores** debemos incluir esta variable.
+
+Más que una simple correlación, lo que dice el MIC es: "Hey, estas dos variables muestran una relación funcional".
+
+En términos de _machine learning_ (y simplificando demasiado): "la variable `y` es dependiente de la variable `x` y una función -no sabemos cuál- puede ser un modelo de la relación entre ellas."
+
+Esto es delicado porque esa relación fue efectivamente creada a partir de una función, una exponencial.
+
+Pero continuemos con otros ejemplos...
+
+<br>
+
+### Agregar ruido
+
+El ruido es una señal no deseada que se suma a la original. En machine learning, el ruido contribuye a que el modelo se confunda. En concreto: dos casos idénticos son ingresados -por ejemplo, clientes- y tienen resultados diferentes -uno compra y el otro no.
+
+Ahora vamos a añadir algo de ruido creando la variable `y_noise_1`.
+
+```{r noisy-relationship, fig.width=4, fig.height=3, fig.cap="Agregando un poco de ruido", out.extra = ''}
+df_exp$y_noise_1=jitter(df_exp$y, factor = 1000, amount = NULL)
+ggplot(df_exp, aes(x=x, y=y_noise_1)) + 
+  geom_line(color='steelblue') + theme_minimal()
+```
+
+Calculando de nuevo la correlación y el MIC, visualizando en ambos casos la matriz completa, que muestra la métrica de correlación/MIC de cada variable de entrada con respecto a todas las demás, incluidas ellas mismas.
+
+```{r}
+# Calcular R cuadrado
+res_R2=cor(df_exp)^2
+res_R2
+
+# Calcular MINE
+res_mine_2=mine(df_exp)
+
+# Visualizar MIC 
+res_mine_2$MIC
+
+```
+
+Al agregar ruido a los datos, el valor de MIC disminuye de 1 a 0.7226365 (-27%), ¡y eso es genial!
+
+R2 también disminuyó, pero sólo apenas, de 0.3899148 a 0.3866319 (-0.8%). 
+
+**Conclusión:** El MIC refleja una relación ruidosa mucho mejor que R2, y nos ayuda a encontrar asociaciones correlacionadas. 
+
+**Sobre el último ejemplo:** Generar datos basándonos en una función solamente sirve para fines educativos. Pero el concepto de ruido en variables es bastante común _casi_ **todos los conjuntos de datos**,  sin importar su fuente. No tienen que hacer nada para agregar ruido a las variables, ya está ahí.
+Los modelos de machine learning lidian con este ruido aproximándose a la forma _real_ de los datos.
+
+Es bastante útil usar la medición del MIC para tener una idea de la información presente en la relación entre dos variables.
+
+<br>
+
+### Midiendo la no linealidad (MIC-R2)
+
+La función `mine` devuelve varias métricas, sólo observamos **MIC**, pero dada la naturaleza del algoritmo (pueden referirse al paper original [@ReshefEtAl2011]), puede computar indicadores mucho más interesantes. Pueden examinarlos todos en el objeto `res_mine_2`.
+
+Uno de ellos es `MICR2`, que se utiliza como una medida de **no linealidad**. Se calcula haciendo: MIC - R2. Como R2 mide la linealidad, un alto `MICR2` indicaría una relación no lineal.
+
+Podemos verificarlo calculando el MICR2 manualmente, las dos matrices a continuación devuelven el mismo resultado:
+
+```{r, eval=FALSE}
+# MIC r2: métrica de no linealidad
+round(res_mine_2$MICR2, 3)
+# Calcular MIC r2 manualmente
+round(res_mine_2$MIC-res_R2, 3)
+```
+
+Las relaciones no lineales son más complejas para construir modelos, sobre todo utilizando un algoritmo lineal como árboles de decisión o regresión lineal. 
+
+Imaginen que debemos explicar la relación a otra persona, necesitaremos "más palabras" para hacerlo. Es más fácil decir: _"A aumenta mientras B disminuye y el coeficiente siempre es 3x"_ (si A=1 entonces B=3, lineal).
+
+En comparación con: _"A aumenta mientras B disminuye, pero A es casi 0 hasta que B alcanza el valor 10, entonces A aumenta a 300; y cuando B alcanza 15, A llega a 1000."_
+
+```{r measuring-non-linearity, message=FALSE, fig.width=8, fig.height=3, tidy=FALSE, fig.cap="Comparando relaciones", out.extra = ''}
+# Crear un ejemplo con datos
+df_example=data.frame(x=df_exp$x, 
+                      y_exp=df_exp$y, 
+                      y_linear=3*df_exp$x+2)
+
+# Obtener métricas de mine 
+res_mine_3=mine(df_example)
+
+# Generar etiquetas para visualizar los resultados
+results_linear = 
+  sprintf("MIC: %s \n MIC-R2 (non-linearity): %s",
+          res_mine_3$MIC[1,3],
+          round(res_mine_3$MICR2[1,3],2)
+          )
+
+results_exp = 
+  sprintf("MIC: %s \n MIC-R2 (non-linearity): %s", 
+          res_mine_3$MIC[1,2],
+          round(res_mine_3$MICR2[1,2],4)
+          )
+
+# Graficar los resultados 
+# Crear el gráfico de la variable exponencial
+p_exp=ggplot(df_example, aes(x=x, y=y_exp)) + 
+  geom_line(color='steelblue') + 
+  annotate("text", x = 11, y =0.4, label = results_exp) + 
+  theme_minimal()
+
+# Crear el gráfico de la variable lineal
+p_linear=ggplot(df_example, aes(x=x, y=y_linear)) + 
+  geom_line(color='steelblue') + 
+  annotate("text", x = 8, y = 55, 
+           label = results_linear) + 
+  theme_minimal()
+
+grid.arrange(p_exp,p_linear,ncol=2)
+```
+
+<br>
+
+Ambos gráficos muestran una correlación (o relación) perfecta, con MIC=1.
+Con respecto a la no linealidad, MICR2 se comporta como era esperado, en  `y_exp`=0.6101, y en `y_linear`=0. 
+
+Este punto es importante dado que **MIC se comporta como R2 en relaciones lineales**, además se adapta bastante bien a relaciones **no lineales** como vimos antes, obteniendo una métrica de puntuación particular (`MICR2`) para analizar la relación. 
+
+
+<br>
+
+### Medir información en el Cuarteto de Anscombe
+
+¿Recuerdan el ejemplo que revisamos al principio? Cada par del Cuarteto de Anscombe devuelve un **R2 de 0.86**. Pero basándonos en los gráficos estaba claro que no todos los pares exhiben ni una buena correlación ni una distribución similar de `x` y `y`.
+
+Pero, ¿qué pasa si medimos la relación con una métrica basada en la Teoría de la Información? Sí, otra vez MIC.
+
+```{r anscombe-set-information, fig.cap="Estadístico MIC", out.extra = ''}
+# Calcular el MIC para cada par
+mic_1=mine(anscombe_data$x1, anscombe_data$y1, alpha=0.8)$MIC
+mic_2=mine(anscombe_data$x2, anscombe_data$y2, alpha=0.8)$MIC
+mic_3=mine(anscombe_data$x3, anscombe_data$y3, alpha=0.8)$MIC
+mic_4=mine(anscombe_data$x4, anscombe_data$y4, alpha=0.8)$MIC
+
+# Graficar el MIC en una cuadrícula 2x2 
+grid.arrange(plot_anscombe("x1", "y1", mic_1, "MIC"), plot_anscombe("x2", "y2", mic_2,"MIC"), plot_anscombe("x3", "y3", mic_3,"MIC"), plot_anscombe("x4", "y4", mic_4,"MIC"), ncol=2, nrow=2)
+
+```
+
+Como habrán notado, aumentamos el valor de `alpha` a 0.8, esto es una buena práctica -de acuerdo a la documentación- cuando analizamos muestras pequeñas. El valor por defecto es 0.6 y el máximo es 1.
+
+En este caso, el valor de MIC detectó la relación más espuria en el par `x4 - y4`. Probablemente debido a unos pocos casos por gráfico (11 filas) el MIC fue el mismo para todos los otros pares. Tener más casos se reflejará en diferentes valores de MIC.
+
+Pero cuando se combina el MIC con **MIC-R2** (medida de no linealidad) aparecen nuevas perspectivas:
+
+```{r anscombe-set}
+# Calcular el MIC para cada par, noten que el objeto "MIC-R2" lleva guión cuando los datos ingresados son dos vectores, a diferencia de las ocasiones en las que toma un data frame, que es "MICR2".
+mic_r2_1=mine(anscombe_data$x1, anscombe_data$y1, alpha = 0.8)$`MIC-R2`
+mic_r2_2=mine(anscombe_data$x2, anscombe_data$y2, alpha = 0.8)$`MIC-R2`
+mic_r2_3=mine(anscombe_data$x3, anscombe_data$y3, alpha = 0.8)$`MIC-R2`
+mic_r2_4=mine(anscombe_data$x4, anscombe_data$y4, alpha = 0.8)$`MIC-R2`
+
+# Ordenar por mic_r2
+df_mic_r2=data.frame(pair=c(1,2,3,4), mic_r2=c(mic_r2_1,mic_r2_2,mic_r2_3,mic_r2_4)) %>% arrange(-mic_r2)
+df_mic_r2
+```
+
+
+Al ordenarlos de manera decreciente según su **no linealidad** los resultados son consistentes con los gráficos: 2 > 3 > 1 > 4.
+Ocurre algo llamativo en el par 4, un número negativo. Esto se debe a que el MIC es inferior al R2. Una relación que merece ser graficada.
+
+<br>
+
+### Midiendo la no-monotonicidad: medida MAS
+
+MINE también nos puede ayudar a análizar numéricamente series temporales con respecto a su no-monotonicidad con **MAS** (puntaje de asimetría máxima).
+
+Una serie monótona es aquella que nunca cambia su tendencia, siempre es creciente o decreciente. Encontrarán más información sobre esto en [@monotonic_function].
+
+El siguiente ejemplo simula dos series temporales, una no-monótona `y_1` y una monótona `y_2`.
+
+```{r monotonic-non-monotonic-function, fig.height=3.5, fig.width=8, tidy=FALSE, fig.cap="Monotonicidad en funciones", out.extra = ''}
+# Crear datos de muestra (simulando una serie temporal)
+time_x=sort(runif(n=1000, min=0, max=1))
+y_1=4*(time_x-0.5)^2
+y_2=4*(time_x-0.5)^3
+
+# Calcular el MAS para ambas series
+mas_y1=round(mine(time_x,y_1)$MAS,2)
+mas_y2=mine(time_x,y_2)$MAS
+
+# Unir todo
+df_mono=data.frame(time_x=time_x, y_1=y_1, y_2=y_2)
+
+# Graficar
+label_p_y_1 = 
+  sprintf("MAS=%s (goes down \n and up => not-monotonic)", 
+          mas_y1)
+
+p_y_1=ggplot(df_mono, aes(x=time_x, y=y_1)) + 
+  geom_line(color='steelblue') + 
+  theme_minimal()  + 
+  annotate("text", x = 0.45, y =0.75, 
+           label = label_p_y_1)
+
+label_p_y_2=
+  sprintf("MAS=%s (goes up => monotonic)", mas_y2)
+
+p_y_2=ggplot(df_mono, aes(x=time_x, y=y_2)) + 
+  geom_line(color='steelblue') + 
+  theme_minimal() + 
+  annotate("text", x = 0.43, y =0.35, 
+           label = label_p_y_2)
+
+grid.arrange(p_y_1,p_y_2,ncol=2)
+
+```
+
+<br>
+
+Desde otra perspectiva, el MAS también es útil para detectar relaciones periódicas. Ilustremos esto con un ejemplo:
+
+```{r periodical-function, fig.height=3.5, fig.width=8, tidy=FALSE, fig.cap="Periodicidad en funciones", out.extra = '', echo=FALSE}
+
+# Crear datos para una función no periódica
+x_per=seq(-2*pi,2*pi,0.2)
+df_per=data.frame(x=x_per, y=sin(2*x_per))
+
+# Crear datos para una función periódica
+x_non_per=1:100
+df_non_per=data.frame(x=x_non_per, y=2*x_non_per*x_non_per+2)
+
+# Calcular el MAS para ambas series
+mas_y1_b=mine(df_per$x,df_per$y)$MAS
+mas_y2_b=round(mine(df_non_per$x,df_non_per$y)$MAS,2)
+
+# Graficar
+p_y_1_b=ggplot(df_per, aes(x=x, y=y)) + 
+  geom_line(color='steelblue') + 
+  theme_minimal() +
+  ggtitle(sprintf("MAS=%s (periodic)", round(mas_y1_b,2)))
+
+p_y_2_b=ggplot(df_non_per, aes(x=x, y=y)) + 
+  geom_line(color='steelblue') + 
+  theme_minimal()  + 
+  ggtitle(sprintf("MAS=%s (non-periodic)", mas_y2_b))
+
+grid.arrange(p_y_1_b, p_y_2_b, ncol=2)
+```
+
+#### Un ejemplo más real: Series Temporales
+
+Consideren el siguiente caso que contiene tres series temporales: "y1", "y2" y "y3". Se pueden analizar numéricamente en cuanto a su no-monotonicidad o a la tendencia general de crecimiento.
+
+```{r correlation-time-series, fig.height=3, fig.width=5, tidy=FALSE, fig.cap="Ejemplo de series temporales", out.extra = ''}
+# Leer los datos
+df_time_series = 
+  read.delim(file="https://goo.gl/QDUjfd")
+
+# Convertirlos a formato largo para poder graficarlos
+df_time_series_long=melt(df_time_series, id="time")
+
+# Graficar
+plot_time_series = 
+  ggplot(data=df_time_series_long,
+         aes(x=time, y=value, colour=variable)) +
+  geom_line() + 
+  theme_minimal() + 
+  scale_color_brewer(palette="Set2")
+
+plot_time_series
+```
+
+```{r}
+# Calcular y visualizar los valores de MAS para datos de series temporales
+mine_ts=mine(df_time_series)
+mine_ts$MAS 
+```
+
+<br>
+
+Necesitamos mirar la columna de "tiempo", así tendremos el valor de MAS de cada serie con respecto al tiempo.
+`y2` es la serie más monótona (y menos periódica), y podemos confirmarlo mirándola. Parece que siempre es ascendente.
+
+**Resumen de MAS:**
+
+* MAS ~ 0 indica una función monótona o no periódica ("siempre" ascendente o descendente)
+* MAS ~ 1 indica una función no-monótona o periódica
+
+
+<br>
+
+### Correlación entre series temporales
+
+La métrica MIC también puede medir la **correlación en series temporales**, no es una herramienta de uso general pero puede ser útil para comparar diferentes series rápidamente.
+
+Esta sección se basa en los mismos datos que usamos en el ejemplo de MAS.
+
+```{r time-series, fig.width=4, fig.height=2.5, fig.cap="Ejemplo de series temporales", out.extra = ''}
+# Visualizar otra vez las 3 series temporales
+plot_time_series
+# Visualizar los valores de MIC
+mine_ts$MIC
+
+```
+<br>
+
+Ahora tenemos que mirar la columna `y1`. De acuerdo con la medición del MIC, podemos confirmar lo mismo que se muestra en el último gráfico: 
+
+`y1` es más parecido a `y3` (MIC=0.709) que a `y2` (MIC=0.61). 
+
+<br>
+
+#### Yendo más allá: Deformación dinámica del tiempo
+
+El MIC no servirá en escenarios más complejos que tengan series temporales que varíen en velocidad, utilizaremos la técnica de [deformación dinámica del tiempo] (https://en.wikipedia.org/wiki/Dynamic_time_warping) (**DTW**, en inglés).
+
+Usemos una imagen para acercarnos al concepto visualmente: 
+
+```{r Dynamic-Time-warping, echo=FALSE, out.width="300px", fig.cap="Deformación dinámica del tiempo", out.extra = ''}
+knitr::include_graphics("exploratory_data_analysis/dynamic_time_warping.png")
+```
+
+
+Fuente de la imagen: _Deformación dinámica del tiempo Convirtiendo imágenes en series temporales para data mining_ [@img_time_series].
+
+La última imagen muestra dos enfoques diferentes para comparar series temporales, y el **euclídeo** es más similar a la medición del MIC. Mientras que la Deformación dinámica del tiempo puede rastrear las similitudes que ocurren en diferentes momentos.
+
+Una linda implementación en **R**: [dtw package](http://dtw.r-forge.r-project.org).
+
+Encontrar correlaciones entre series temporales es otra forma de **agrupar series temporales**.
+
+<br>
+
+### Correlación en variables categóricas
+
+MINE -y muchos otros algoritmos- sólo funcionan con datos numéricos. Tenemos que hacer un truco de **preparación de datos**, convirtiendo cada variable categórica en un flag (o variable dummy).
+
+Si la variable categórica original tiene 30 valores posibles, como resultado tendremos 30 nuevas columnas con valor `0` o `1`, donde `1` representa la presencia de esa categoría en la fila.
+
+Si usamos el paquete `caret` de R, esta conversión sólo requiere dos líneas de código:
+
+```{r dummy-vars, message=FALSE, tidy=FALSE}
+library(caret)
+
+# Seleccionar sólo algunas variables
+heart_disease_2 = 
+  select(heart_disease, max_heart_rate, oldpeak, 
+         thal, chest_pain,exer_angina, has_heart_disease)
+
+# Esta conversión de categórica a numérica es meramente para 
+# tener un gráfico más limpio
+heart_disease_2$has_heart_disease=
+  ifelse(heart_disease_2$has_heart_disease=="yes", 1, 0)
+
+# Convierte todas las variables categóricas (factor y 
+# carácter para R) en variables numéricas
+# saltando las originales para que los datos estén
+# listos para usar
+dmy = dummyVars(" ~ .", data = heart_disease_2)
+
+heart_disease_3 = 
+  data.frame(predict(dmy, newdata = heart_disease_2))
+
+# Importante: Si ven este mensaje
+# `Error: Missing values present in input variable 'x'. 
+# Consideren usar = 'pairwise.complete.obs'.` 
+# Es porque los datos tienen valores faltantes.
+# Por favor no omitan valores NA sin analizar el
+# impacto antes, en este caso no es importante. 
+heart_disease_4=na.omit(heart_disease_3)
+  
+# ¡Computen el mic!
+mine_res_hd=mine(heart_disease_4)
+```
+
+```{r, message=FALSE, echo=FALSE}
+detach("package:caret")
+```
+
+Visualizando una muestra...
+
+```{r}
+mine_res_hd$MIC[1:5,1:5]
+```
+
+Donde la columna `thal.3` toma un valor de 1 cuando `thal=3`.
+
+<br>
+
+#### ¡Visualizamos unos sofisticados gráficos! 
+
+Utilizaremos el paquete `corrplot` de R que puede graficar un objeto `cor`  (matriz de correlación clásica), o cualquier otra matriz. Graficaremos la matriz **MIC** en este caso, pero también se puede usar cualquier otra, por ejemplo, **MAS** o cualquier otra métrica que devuelva una matriz cuadrada de correlaciones.
+
+Los dos gráficos se basan en los mismos datos pero muestran la correlación de distintas formas. 
+
+```{r correlation-information-theory, tidy=FALSE, fig.cap="Gráfico de correlación", out.extra = ''}
+# Biblioteca para graficar esta matriz
+library(corrplot) 
+# Para usar la paleta de color brewer.pal
+library(RColorBrewer) 
+
+# Truco para visualizar el valor máximo de la escala
+# excluyendo la diagonal (var. con respecto a sí misma)
+diag(mine_res_hd$MIC)=0
+
+# Gráfico de correlación con círculos. 
+corrplot(mine_res_hd$MIC, 
+         method="circle",
+         col=brewer.pal(n=10, name="PuOr"),
+         # Mostrar sólo la diagonal superior
+         type="lower", 
+         #color, tamaño y rotación de las etiquetas
+         tl.col="red",
+         tl.cex = 0.9, 
+         tl.srt=90, 
+         # no visualizar la diagonal,
+         # (var con respecto a sí misma)
+         diag=FALSE, 
+         # aceptar cualquier matriz, mic en este caso
+         #(no es un elemento de correlación)
+         is.corr = F 
+        
+)
+
+
+# Gráfico de correlación con color y correlación MIC
+corrplot(mine_res_hd$MIC, 
+         method="color",
+         type="lower", 
+         number.cex=0.7,
+         # Agregar coeficiente de correlación
+         addCoef.col = "black", 
+         tl.col="red", 
+         tl.srt=90, 
+         tl.cex = 0.9,
+         diag=FALSE, 
+         is.corr = F 
+)
+
+```
+
+Simplemente cambien el primer parámetro -`mine_res_hd$MIC`- a la matriz que quieran y reutilicen el código con sus datos.
+
+<br>
+
+#### Un comentario sobre este tipo de gráficos
+
+Sólo son útiles cuando no hay un gran número de variables. O si primero hacen una selección de variables, teniendo en cuenta que todas deben ser numéricas. 
+
+Si hay alguna variable categórica en la selección, pueden convertirla primero en numérica e inspeccionar la relación entre las variables, para ver cómo ciertos valores de las variables categóricas están más relacionados con ciertos resultados, como en este caso.
+
+<br>
+
+#### ¿Qué tal si sacamos algunas conclusiones de los gráficos?
+
+Como la variable a predecir es `has_heart_disease`, aparece algo interesante: tener una enfermedad cardíaca está más correlacionado con `thal=3` que con el valor `thal=6`.
+
+El mismo análisis aplica para la variable `chest_pain', un valor de 4 es más peligroso que un valor de 1.
+
+Y podemos comprobarlo con otro gráfico:
+
+```{r profiling-target-variable, fig.height=2, fig.width=3, fig.cap="Análisis visual utilizando cross-plot", out.extra = ''}
+cross_plot(heart_disease, input = "chest_pain", target = "has_heart_disease", plot_type = "percentual")
+```
+
+La probabilidad de tener una enfermedad cardíaca es del 72,9% si el paciente tiene `dolor en el pecho=4`. Más de 2 veces más probable que si tiene `dolor_en_el_pecho=1` (72.9 vs 30.4%).
+
+<br>
+
+**Algunas reflexiones...**
+
+Los datos son los mismos, pero el enfoque para explorarlos es diferente. Lo mismo ocurre cuando estamos creando un modelo predictivo, los datos ingresados en el espacio _N-dimensional_ pueden ser abordados mediante diferentes modelos, como:  Máquinas de vectores soporte (support vector machine o SVM, en inglés), Bosques aleatorios (random forests), etc. 
+
+Como un fotógrafo que dispara desde diferentes ángulos o desde diferentes cámaras. El objeto es siempre el mismo, pero la perspectiva brinda información diferente.
+
+La combinación de tablas en crudo y diferentes gráficos nos da una perspectiva de objeto más real y complementaria.
+
+<br>
+
+### Análisis de correlación basado en la Teoría de la Información {#selecting_best_vars_mic}
+
+Basándose en la medición del MIC, la función mine puede recibir el índice de la columna a predecir (o para obtener todas las correlaciones contra una sola variable).
+
+```{r importance-variable-ranking, fig.width=6, fig.height=4.5, tidy=FALSE, fig.cap="Correlación utilizando la Teoría de la Información", out.extra=''}
+
+# Obtener el índice de la variable a 
+# predecir: has_heart_disease
+target="has_heart_disease"
+index_target=grep(target, colnames(heart_disease_4))
+
+# master toma el número de la columna índice para
+# calcular todas las correlaciones
+mic_predictive=mine(heart_disease_4, 
+                    master = index_target)$MIC
+
+# Crear el data frame que contiene los resultados,
+# ordenándolos por correlación decreciente y excluyendo
+# la correlación del objetivo con respecto a sí mismo
+df_predictive = 
+  data.frame(variable=rownames(mic_predictive), 
+                         mic=mic_predictive[,1], 
+                         stringsAsFactors = F) %>% 
+  arrange(-mic) %>% 
+  filter(variable!=target)
+
+# Crear un colorido gráfico que muestre la 
+# importancia de las variables basándonos en
+# la medición del MIC
+ggplot(df_predictive, 
+       aes(x=reorder(variable, mic),y=mic, fill=variable)
+       ) + 
+  geom_bar(stat='identity') + 
+  coord_flip() + 
+  theme_bw() + 
+  xlab("") + 
+  ylab("Variable Importance (based on MIC)") + 
+  guides(fill=FALSE)
+   
+```
+
+Aunque es recomendable ejecutar las correlaciones entre todas las variables para excluir factores ingresados correlacionados.
+
+<br>
+
+#### Consejos prácticos al utilizar `mine` 
+
+Si lleva demasiado tiempo, consideren tomar una muestra.
+Si hay muy pocos datos, consideren utilizar un valor más alto en el parámetro `alpha`, 0.6 es el valor por defecto.
+También se puede ejecutar en paralelo, configurando el parámetro `n.cores=3` si tienen 4 cores. Una buena práctica en general cuando se ejecutan procesos paralelos, el core extra será utilizado por el sistema operativo.
+
+<br>
+
+
+### ¿Sólo MINE cubre esto?
+
+No. Sólo usamos la suite de MINE, pero hay otros algoritmos relacionados con [información mutua](http://www.scholarpedia.org/article/Mutual_information). 
+En R algunos de los paquetes son: [entropy](https://cran.r-project.org/web/packages/entropy/entropy.pdf) y [infotheo](https://artax.karlin.mff.cuni.cz/r-help/library/infotheo/html/mutinformation.html).
+
+El paquete `funModeling` (desde la versión 1.6.6) introduce la función `var_rank_info`, que calcula varias métricas de la Teoría de la Información, como vimos en la sección [Análisis de correlación basado en la Teoría de la Información](#select_features_var_rank_info).
+
+En **Python** se puede calcular información mutua mediante scikit-learn, [aquí un ejemplo](stackoverflow.com/questions/20491028/optimal-way-to-compute-pairwise-mutual-information-using-numpy).
+
+El concepto trasciende la herramienta.
+
+<br>
+
+#### Otro ejemplo de correlación (información mutua)
+
+Esta vez utilizaremos el paquete `infotheo`. Primero tenemos que hacer un un paso de **preparación de datos**, aplicando una función `discretize` (o de binning) que está incluida en el paquete. Convierte todas las variables numéricas a categóricas basándose en criterios de igual frecuencia. 
+
+El siguiente código creará la matriz de correlación como hemos visto antes, pero basándose en el índice de información mutua: 
+
+```{r correlation-matrix-information-theory, eval=FALSE, fig.cap="Matriz de correlación"}
+library(infotheo)
+# Discretizar cada variable
+heart_disease_4_disc=discretize(heart_disease_4) 
+
+# Calcular la "correlación" basándonos en información mutua
+heart_info=mutinformation(heart_disease_4_disc, method= "emp")
+
+# Truco para visualizar el valor máximo de la escala
+# excluyendo la diagonal (variable con respecto a sí misma)
+diag(heart_info)=0
+
+# Gráfico de correlación con color y correlación con información mutua del paquete Infotheo. Esta línea sólo obtiene el gráfico de la derecha.
+corrplot(heart_info, method="color",type="lower", number.cex=0.6,addCoef.col = "black", tl.col="red", tl.srt=90, tl.cex = 0.9, diag=FALSE, is.corr = F)
+```
+
+
+```{r Comparing-MIC-and-mutual-information-index, echo=FALSE, out.width="100%", fig.cap="Comparando la importancia de las variables"}
+knitr::include_graphics("exploratory_data_analysis/mic_mutual_info.png")
+```
+
+
+El puntaje de correlación basado en información mutua ordena las relaciones de una forma bastante similar al MIC, ¿no es cierto?
+
+<br>
+
+### Medidas de información: Una perspectiva general
+
+Más allá de la correlación, MIC y otras medidas de información identifican si hay una _relación funcional_. 
+
+Un alto MIC indica que la relación entre las dos variables puede explicarse por una función. Es nuestro trabajo encontrar esa función o modelo predictivo.
+
+Este análisis se extiende a n-variables, este libro introduce otro algoritmo en el capítulo de Selección de las mejores variables.
+
+Algunos modelos predictivos funcionan mejor que otros, pero si la relación es absolutamente ruidosa, sin importar cuán avanzado sea el algoritmo, los resultados serán malos. 
+
+<br>
+
+Hay mucho más sobre la **Teoría de la Información** más adelante. Por ahora, pueden investigar estas lecturas didácticas:
+
+* Video introductorio de 7 minutos https://www.youtube.com/watch?v=2s3aJfRr9gE 
+* http://alex.smola.org/teaching/cmu2013-10-701x/slides/R8-information_theory.pdf
+* http://www.scholarpedia.org/article/Mutual_information
+
+<br>
+
+### Conclusiones
+
+El Cuarteto de Anscombe nos enseñó la buena práctica de combinar la _estadística cruda_ con un gráfico.
+
+Pudimos ver cómo el **ruido** puede afectar la relación entre dos variables, y este fenómeno siempre aparece en los datos. El ruido en los datos confunde al modelo predictivo. 
+
+El ruido está relacionado con el error, y puede ser estudiado con medidas basadas en la Teoría de la Información, tales como 
+**información mutua** y **MIC**, que van un paso más allá de la típica R cuadrado. Existe un estudio clínico que utiliza MINE como selector de características en[@Caban2012].
+
+Estos métodos son aplicables en **ingeniería de factores** como un método que no se basa en un modelo predictivo para clasificar las variables más importantes. También se aplica a las series temporales agrupadas. 
+
+Siguiente capítulo recomendado: [Selección de las mejores variables](#seleccion_mejores_variables)
+
+<br>
+
+---
+
+```{r, echo=FALSE}
+knitr::include_graphics("introduction/spacer_bar.png") 
+```
+
+---

@@ -1,0 +1,9 @@
+book_filename: "libro-vivo-ciencia-datos"
+delete_merged_file: true
+new_session: yes
+rmd_files:
+  html: ["index.Rmd", "01_analisis_exploratorio_datos.Rmd", "02_preparacion_datos.Rmd", "03_seleccionar_mejores_variables.Rmd", "04_evaluar_desempeño_modelo.Rmd", "30_apendice.Rmd", "40_descargar_pdf_ebook.Rmd", "99_referencias.Rmd"]
+  latex: ["index.Rmd", "01_analisis_exploratorio_datos.Rmd", "02_preparacion_datos.Rmd", "03_seleccionar_mejores_variables.Rmd", "04_evaluar_desempeño_modelo.Rmd", "30_apendice.Rmd", "99_referencias.Rmd"]
+  #latex: ["index.Rmd", "04_assesing_model_performance.Rmd", "30_appendix.Rmd", "99_references.Rmd"]
+  #html: ["index.Rmd", "01_exploratory_data_analysis.Rmd"]
+

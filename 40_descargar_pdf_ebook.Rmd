@@ -1,0 +1,54 @@
+# Descargar libro {#descargar-libro}
+
+Si les gustó el libro y quieren apoyar el proyecto, pueden adquirir para siempre y toda la eternidad el **Libro Vivo de Ciencia de Datos** portátil en versión PDF, mobi, y Kindle. ¡Las tres juntas! `r emo::ji("slightly_smiling_face")`. 
+
+<br> 
+
+Compra segura por **Gumroad** `r emo::ji("closed_lock_with_key")`: 
+
+_Nota: Intenten desactivar la extensión 'Ghostery' durante la compra, se sabe que tiene algunos problemas._ 
+
+
+---
+
+<script src="https://gumroad.com/js/gumroad-embed.js"></script>
+<div class="gumroad-product-embed" data-gumroad-product-id="tORBv"><a href="https://gumroad.com/l/tORBv">Loading...</a></div>
+
+---
+
+Si no apareció el formulario de arriba o desean comprarlo directamente del sitio de Gumroad, sigan este link: https://gumroad.com/l/tORBv
+
+---
+
+**¡Versión de papel y Kindle en Amazon!**
+
+Este libro ahora está disponible en Amazon. **[¡Miren!](https://www.amazon.com/dp/9874269049)** `r emo::ji("green_book")` `r emo::ji("rocket")`.
+
+
+---
+
+_¿Hay alguna diferencia entre las versiones online, PDF, mobi o Kindle?_
+
+No, son todas iguales. El **Libro Vivo de Ciencia de Datos** es y siempre será completamente accesible, de hecho es de código abierto  (`Attribution-NonCommercial-ShareAlike 4.0 International`).
+
+_¿Qué pasa si sale una nueva versión? / ¿Puedo acceder a las versiones más nuevas?_
+
+¡Claro! Después de la compra, cada tanto serán notificados vía e-mail sobre la publicación de una nueva versión (pueden desactivar esta notificación).
+
+La modalidad es que cada uno le asigna el precio que considere justo, con un mínimo de 5 dólares estadounidenses. ¡Feliz lectura! `r emo::ji("rocket")`
+
+_¿Cómo puedo contactar al autor?_
+
+Si desean contactarme pueden hacerlo a pcasas.biz <arroba> gmail.com, no necesitan un motivo específico; ¡puede ser por cualquier cosa, desde sugerir un nuevo tema hasta simplemente compartir una buena experiencia que tuvieron al aplicar algún concepto que aprendieron aquí, es bienvenida!
+
+
+`r emo::ji("worried")`: _No tengo suficiente dinero para contribuir, pero igual *realmente* quiero la versión portátil._
+No hay problema, todos hemos pasado por malos momentos, simplemente escríbanme a pcasas.biz (arroba) gmail.com `r emo::ji("wink")`.
+
+Me gusta la idea de tener -cuando es posible- acceso gratuito a la educación, tal es el caso de la educación universitaria en Argentina, Finlandia (entre otros pocos países). Es por eso que cualquiera que desee estudiar y explorar nuevos horizontes puede hacerlo. El dinero no debería ser una barrera a la hora de adquirir conocimiento.
+
+
+Manténganse al tanto en [twitter](https://twitter.com/pabloc_ds).
+
+
+
