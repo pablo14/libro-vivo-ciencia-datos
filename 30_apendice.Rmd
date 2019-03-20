@@ -21,7 +21,7 @@ Los percentiles se utilizan en el análisis numérico, así como en la evaluaci�
 <br>
 
 ```{r how-to-calculate-percentiles, echo=FALSE, out.width="100%", fig.cap="Cómo calcular percentiles", out.extra=''}
-knitr::include_graphics("exploratory_data_analysis/how_to_calculate_percentiles.png")
+knitr::include_graphics("exploratory_data_analysis/como_calcular_percentiles.png")
 ```
 
 
@@ -66,8 +66,7 @@ select(data_sample, Country.Name, rural_poverty_headcount)
 
 Tengan en cuenta que el vector se ordena sólo con fines didácticos. _Como dijimos en el capítulo de Análisis numérico, a nuestros ojos les gusta el orden._
 
-Ahora aplicamos la función "cuantitativa" a la variable 
-`rural_poverty_headcount` (el porcentaje de la población rural que vive por debajo de las líneas de pobreza): 
+Ahora aplicamos la función "cuantitativa" a otra variable (el porcentaje de la población rural que vive por debajo de las líneas de pobreza): 
 
 ```{r}
 quantile(data_sample$rural_poverty_headcount)
@@ -423,7 +422,7 @@ Nota: Analiza variables numéricas y categóricas. También se utiliza con el m�
 Obtiene la distribución relativa y absoluta entre una variable de entrada y una variable objetivo.
 Es útil para explicar y reportar si una variable es importante o no.
 
-```{r profiling-variable-predictive-modeling, fig.height=4, fig.width=8, results=FALSE,fig.cap="cross plot: Visualizar variable de entrada vs. variable objetivo", out.extra=''}
+```{r profiling-variable-predictive-modeling, fig.height=4, fig.width=8, results=FALSE,fig.cap="cross plot: Visualizar variable de entrada vs. variable objetivo", out.extra='', message=FALSE}
 cross_plot(data=heart_disease, input=c("age", "oldpeak"), target="has_heart_disease")
 ```
 
@@ -538,7 +537,7 @@ Notas:
 
 La segmentación, o el criterio de discretización para cualquier variable numérica es igual frecuencia. Las variables factor son convertidas directamente a variables carácter.
 
-```{r, results=FALSE}
+```{r, results=FALSE, message=FALSE}
 iris_char=convert_df_to_categoric(data = iris, n_bins = 5)
 
 # Verificar las primeras filas
