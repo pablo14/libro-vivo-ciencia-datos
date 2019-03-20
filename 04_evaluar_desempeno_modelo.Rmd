@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ```{r include = FALSE}
 if(!knitr:::is_html_output())
 {
@@ -260,11 +265,11 @@ Dado que el resultado de un modelo binario debería ser un número que indique l
 El siguiente **flujo de trabajo de validación** puede resultarles útil a la hora de construir un modelo predictivo que implique tiempo.
 
 ```{r model-performance-workflow, echo=FALSE, out.width="100%", fig.cap="Un flujo de trabajo de validación para problemas que dependen del tiempo", out.extra=''}
-knitr::include_graphics("model_performance/model_validation_workflow.png")
+knitr::include_graphics("model_performance/flujo_para_validar_modelo.png")
 ```
 
 
-_[Ampliar imagen.](http://datascienceheroes.com/img/blog/model_validation_workflow.png)_
+_[Ampliar imagen.](http://datascienceheroes.com/img/blog/flujo_para_validar_modelo.png)_
 
 <br>
 

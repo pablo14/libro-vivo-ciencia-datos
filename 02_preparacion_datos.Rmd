@@ -476,8 +476,7 @@ heart_disease_discretized =
 Parámetros:
 
 - `data`: data frame que contiene las variables a procesar.
-- `data_bins`: data frame que devolvió la función 
-`discretize_get_bins`. Si el usuario la modifica, entonces cada límite superior deberá estar separado por un carácter pipe (`|`) como se ve en el ejemplo.
+- `data_bins`: data frame resultado dem`discretize_get_bins`. Si el usuario la modifica, entonces cada límite superior deberá estar separado por un carácter pipe (`|`) como se ve en el ejemplo.
 - `stringsAsFactors`: `TRUE` por defecto, las variables finales serán factor (en lugar de un carácter) y útiles para graficar.
 
 #### Resultados finales y sus gráficos
@@ -845,7 +844,7 @@ A continuación se presentan algunas ideas para tratar esto:
 
 ---
 
-#### Caso 1: Reducción mediante la recategorización de valores menos representativos {#reduccion_cardinalidad_menos_rep}.
+#### Caso 1: Reducción mediante la recategorización de valores menos representativos {#reduccion_cardinalidad_menos_rep}
 
 Mantengamos todos los casos que tengan al menos un determinado porcentaje de representación en los datos. Supongamos que cambiamos el nombre de los países que tienen menos del 1% de presencia en los datos a `others`.
 
@@ -986,7 +985,7 @@ Verificando la agrupación final (variable `country_rec`):
 categ_analysis(data=data_country_2, input="country_rec", target = "has_flu")
 ```
 
-Cada grupo parece tener un buen tamaño de muestra con respecto a la distribución de `sum_target`. Nuestra transformación dejó a `low_likelihood` con una representación del 21% del total de casos, aún con 0 casos positivos (`sum_target`=0). Y `low_target_share` con 3 casos positivos, lo que representa el 3.36% de los casos positivos.
+Cada grupo parece tener un buen tamaño de muestra con respecto a la distribución de `sum_target`. Nuestra transformación dejó a `low_likelihood` con una representación del 21% del total de casos, aún con 0 casos positivos (`sum_target`=0). Y `low_target_share` con 3 casos positivos, lo que representa el 3.6% de los casos positivos.
 
 Todos los grupos parecen tener una buena representación. Esto se puede comprobar en la variable `perc_rows`. Todos los casos están por encima del 7%. 
 
@@ -1955,8 +1954,12 @@ Dos variables tienen 4 y 2 filas con valores `NA`, entonces excluimos estas fila
 ```{r}
 # na.omit devuelve el mismo data frame habiendo excluido todas las filas que contenían al menos un valor NA
 heart_disease_clean=na.omit(heart_disease)
-nrow(heart_disease) # número de filas antes de la exclusión
-nrow(heart_disease_clean) # número de filas después de la exclusión
+
+# número de filas antes de la exclusión:
+nrow(heart_disease) 
+
+# número de filas después de la exclusión:
+nrow(heart_disease_clean)
 ```
 
 Después de la exclusión, seis filas de 303 fueron eliminadas. Este enfoque parece adecuado para este conjunto de datos.
