@@ -9,7 +9,7 @@ bibliography: [packages.bib, book.bib]
 biblio-style: apalike
 link-citations: yes
 favicon: "introduction/favicon.ico"
-cover-image: "introduction/data_science_live_book_cover.png"
+cover-image: "introduction/libro_vivo_de_ciencia_de_datos_cover.png"
 github-repo: pablo14/libro-vivo-ciencia-datos
 description: "Un enfoque intuitivo y práctico en machine learning, con análisis y preparación de datos, ¡apto para todas las edades!"
 linestretch: 1.15
@@ -38,18 +38,20 @@ if(!knitr:::is_html_output())
 ```{r, echo=FALSE}
 if (knitr:::is_html_output())
 {
-  knitr::include_graphics("introduction/data-science-live-book.png")
+  knitr::include_graphics("introduction/libro-vivo-de-ciencia-de-datos.png")
 }
 ```
 
-### Versiones en papel y Kindle disponibles en Amazon {-}
-
-Este libro está disponible en Amazon. **[¡Miren!](https://www.amazon.com/dp/9874269049)** `r emo::ji("green_book")` `r emo::ji("rocket")`.
-
-
-_Link a la versión en blanco y negro, también está disponible en color. Puede ser enviado a más de 100 países._ `r emo::ji("earth_americas")`
 
 <br>
+
+### Acerca de esta edición {-}
+
+Finalmente disponible la versión en español del _Data Science Live Book_! El libro se abre sin barreras idiomáticas ante las personas de habla-hispana con ganas de aprender.
+
+Con este libro, ganador del [1st Bookdown Contest](https://community.rstudio.com/t/announcing-winners-of-the-1st-bookdown-contest/16394) (RStudio), podrán acercarse con un enfoque intutitivo y práctico al mundo de la ciencia con datos, el arte del descubrimiento. _Bienvenid@s!_
+
+<br> 
 
 ### ¿Por qué leer este libro? {-}
 
@@ -58,7 +60,7 @@ Este libro facilitará el entendimiento de problemas comunes en el análisis de 
 Construir un modelo predictivo es tan complejo como una línea de código en `R`: 
 
 ```{r, eval=FALSE, echo=TRUE}
-my_fancy_model=randomForest(target ~ var_1 + var_2, my_complicated_data)
+mi_super_modelo=randomForest(target ~ var_1 + var_2, mis_datos_complicados)
 ```
 
 Eso es todo. 
@@ -165,6 +167,15 @@ Todo es gratis y de código abierto, Bookdown, R, Rstudio y este libro `r emo::j
 
 <br>
 
+### Comunidad de R en español {-}
+
+Foro de preguntas y respuestas de R en español: [Datos en R](https://datosenr.org/). 
+
+[argentinaR.org](https://argentinar.org) | [twitter](https://twitter.com/arg_rstats) - Una de las comunidades de R en español donde se organizan encuentros sobre IA, machine learning y cualquier tópico relacionado en R. Además posee un [blog de R en español](https://argentinar.org/category/blogs/).
+
+
+<br>
+
 ### ¿Cómo puedo contactar al autor? `r emo::ji("envelope_with_arrow")` {-}
 
 Si quieren decir _hola_, contribuir comentando que alguna sección no está bien explicada, sugerir un nuevo tema o compartir una buena experiencia que tuvieron al aplicar algún concepto explicado aquí, pueden enviarme un e-mail a:
@@ -198,7 +209,11 @@ Este libro está dedicado a _[Los nadies](https://holywaters.wordpress.com/2011/
 
 ### Información del libro {-}
 
-Publicado originalmente en: [livebook.datascienceheroes.com](http://livebook.datascienceheroes.com).
+Traducción del inglés al español por: [Valentina Varas](http://www.valentinavaras.com/). Revisión por Pablo Casas.
+
+Publicado original en inglés: [Data Science Live Book](https://livebook.datascienceheroes.com/)
+
+Publicación en español: [LibroVivoDeCienciaDeDatos.ai](https://librovivodecienciadedatos.ai).
 
 Con licencia [Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/). 
 
@@ -206,13 +221,13 @@ Con licencia [Attribution-NonCommercial-ShareAlike 4.0 International](https://cr
 knitr::include_graphics('introduction/by-nc-sa.png')
 ```
 
-ISBN: 978-987-42-5911-0 (versión eBook).
+ISBN: 978-987-783-715-5 (versión eBook).
 
 ```{r echo=FALSE, out.width='20%'}
 knitr::include_graphics('introduction/ISBN_number.jpg')
 ```
 
-Copyright (c) 2018.
+Copyright (c) 2019.
 
 ---
 

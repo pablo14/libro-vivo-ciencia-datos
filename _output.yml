@@ -16,7 +16,7 @@ bookdown::gitbook:
       before: |
         <li><a href="./">Libro Vivo de Ciencia de Datos</a></li>
       scroll_highlight: yes
-    edit: https://github.com/pablo14/data-science-live-book/edit/master/%s
+    edit: https://github.com/pablo14/libro-vivo-ciencia-datos/edit/master/%s
   includes:
     in_header: google_analytics.html
 

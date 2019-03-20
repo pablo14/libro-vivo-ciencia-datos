@@ -1,6 +1,6 @@
 create_book <- function(type)
 {
-  fn="data-science-live-book.Rmd"
+  fn="libro-vivo-ciencia-datos.Rmd"
   if (file.exists(fn)) file.remove(fn)
   rmarkdown::clean_site()
 
@@ -26,3 +26,4 @@ beepr::beep_on_error(create_book('pdf'))
 beepr::beep_on_error(create_book('html'))
 
 ## To create thhe epub, use the Build Book icon on RStudio.
+rmarkdown::render_site(output_format = 'bookdown::epub_book', encoding = 'UTF-8');beepr::beep()
