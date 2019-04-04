@@ -22,3 +22,7 @@ bkp_preamble.log
 bkp_texput.log
 render41bf4e1e195a.rds
 template.log
+*.md
+01_analisis_exploratorio_datos_files
+02_preparacion_datos_files
+03_seleccionar_mejores_variables_files

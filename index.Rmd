@@ -49,7 +49,11 @@ if (knitr:::is_html_output())
 
 Finalmente disponible la versión en español del _Data Science Live Book_! El libro se abre sin barreras idiomáticas ante las personas de habla-hispana con ganas de aprender.
 
-Con este libro, ganador del [1st Bookdown Contest](https://community.rstudio.com/t/announcing-winners-of-the-1st-bookdown-contest/16394) (RStudio), podrán acercarse con un enfoque intutitivo y práctico al mundo de la ciencia con datos, el arte del descubrimiento. _Bienvenid@s!_
+Esta publicación es una edición revisada tanto en gramática como en aspectos técnicos de la versión en inglés.
+
+El _Data Science Live Book_, junto con dos artículos de como auto-publicar un libro usando bookdown, fueron premiados por RStudio en el [1st Bookdown Contest](https://community.rstudio.com/t/announcing-winners-of-the-1st-bookdown-contest/16394). 
+
+El objetivo es que puedan acercarse con un enfoque intutitivo y práctico al mundo de la ciencia con datos, el arte del descubrimiento.
 
 <br> 
 
@@ -163,6 +167,8 @@ Este libro, tanto en PDF como formato web, fue creado en Rstudio, usando el incr
 
 Todo es gratis y de código abierto, Bookdown, R, Rstudio y este libro `r emo::ji("slightly_smiling_face")`
 
+Pueden revisar el detrás de escena de como fue generado el libro en bookdown, y como publicarlo en Amazon en:  [How to self-publish a book: A handy list of resources](https://blog.datascienceheroes.com/how-to-self-publish-a-book/) y [How to self publish a book: customizing Bookdown](https://blog.datascienceheroes.com/how-to-self-publish-a-book-customizing-bookdown/).
+
 ¡Ojalá lo disfruten!
 
 <br>
@@ -203,7 +209,7 @@ Revisión técnica del libro: [Pablo Seibelt (aka The Sicarul)](https://www.link
 
 El arte de la tapa fue hecho por: [Bárbara Muñoz](https://www.linkedin.com/in/barbaramercedes/)`r emo::ji("art")`.
 
-Este libro está dedicado a _[Los nadies](https://holywaters.wordpress.com/2011/12/08/los-nadiesthe-nobodies-by-eduardo-galeano)_, un cuento corto escrito por Eduardo Galeano.
+Este libro está dedicado a _[Los nadies](https://holywaters.wordpress.com/2011/12/08/los-nadiesthe-nobodies-by-eduardo-galeano)_, un cuento corto escrito por Eduardo Galeano, y a mis padres.
 
 <br>
 
