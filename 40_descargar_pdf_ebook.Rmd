@@ -18,12 +18,6 @@ _Nota: Intenten desactivar la extensión 'Ghostery' durante la compra, se sabe q
 
 Si no apareció el formulario de arriba o desean comprarlo directamente del sitio de Gumroad, sigan este link: https://gumroad.com/l/AKxFW
 
----
-
-**¡Versión de papel y Kindle en Amazon!**
-
-Este libro ahora está disponible en Amazon. **[¡Miren!](https://www.amazon.com/dp/9874269049)** `r emo::ji("green_book")` `r emo::ji("rocket")`.
-
 
 ---
 
