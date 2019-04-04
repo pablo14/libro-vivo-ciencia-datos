@@ -6,7 +6,7 @@
 <font size="+2">**`resumen`**</font>: Hola! Los invito a <a href="https://librovivodecienciadedatos.ai" target="blank">leer el libro online</a> y/o <a href="https://librovivodecienciadedatos.ai/descargar-libro.html" target="blank">descargarlo aquí</a>. Gracias y que tengan un buen día :)
 
 
-### Acerca de esta edición {-}
+### Acerca de esta edición
 
 Finalmente disponible la versión en español del _Data Science Live Book_! El libro se abre sin barreras idiomáticas ante las personas de habla-hispana con ganas de aprender.
 
