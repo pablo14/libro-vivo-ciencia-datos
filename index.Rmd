@@ -196,7 +196,7 @@ pcasas.biz (arroba) gmail.com. Estoy aprendiendo constantemente, así que es lin
 Además, pueden referirse a los repositorios de **Github** para ambos, el libro y `funModeling`, para reportar bugs, enviar sugerencias, nuevas ideas, etc:
 
 * [funModeling](https://github.com/pablo14/funModeling)
-* [Data Science Live Book](https://github.com/pablo14/data-science-live-book)
+* [Libro Vivo de Ciencia de Datos](https://github.com/pablo14/libro-vivo-ciencia-datos)
 
 <br>
 
