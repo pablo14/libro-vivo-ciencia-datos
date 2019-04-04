@@ -1,6 +1,6 @@
 # Descargar libro {#descargar-libro}
 
-Si les gustó el libro y quieren apoyar el proyecto, pueden adquirir para siempre y toda la eternidad el **Libro Vivo de Ciencia de Datos** portátil en versión PDF y mobi `r emo::ji("slightly_smiling_face")`. 
+Si les gustó el libro y quieren apoyar el proyecto, pueden adquirir para siempre y toda la eternidad el **Libro Vivo de Ciencia de Datos** portátil en versión PDF, mobi, y Kindle. ¡Las tres juntas! `r emo::ji("slightly_smiling_face")`. 
 
 <br> 
 
