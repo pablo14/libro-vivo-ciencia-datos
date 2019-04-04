@@ -1,19 +1,23 @@
 ## Libro Vivo de Ciencia de Datos
 
-<img src="https://datascienceheroes.com/img/blog/data-science-live-book-cover-2.png" alt="Data Science Live Book" width="400px">
+<img src="https://librovivodecienciadedatos.ai/introduction/libro-vivo-de-ciencia-de-datos.png" alt="Libro Vivo de Ciencia de Datos" width="400px">
 
 
-<font size="+2">**`tl;dr`**</font>: Hol! Los invito a <a href="https://livebook.datascienceheroes.com" target="blank">leer el libro online</a> y/o <a href="https://livebook.datascienceheroes.com/download-book.html" target="blank">descargarlo aquí</a>. Gracias y que tengan un buen día :)
+<font size="+2">**`resumen`**</font>: Hola! Los invito a <a href="https://librovivodecienciadedatos.ai" target="blank">leer el libro online</a> y/o <a href="https://librovivodecienciadedatos.ai/descargar-libro.html" target="blank">descargarlo aquí</a>. Gracias y que tengan un buen día :)
 
-#### Versión en papel y Kindle en Amazon
 
-Este libro esta disponible en Amazon [Kindle]( Link: http://a.co/d/dIj1XwD) [Black & White](https://www.amazon.com/dp/9874269049) and [color](https://www.amazon.com/dp/9874273666) 📗 🚀.
+### Acerca de esta edición {-}
 
-Puede ser enviado a mas de 100 paises. 🌎
+Finalmente disponible la versión en español del _Data Science Live Book_! El libro se abre sin barreras idiomáticas ante las personas de habla-hispana con ganas de aprender.
 
-También disponible en [PDF](https://gumroad.com/l/tORBv) :)
+Esta publicación es una edición revisada tanto en gramática como en aspectos técnicos de la versión en inglés.
 
-### `!(tl;dr)`: An overview...
+El _Data Science Live Book_, junto con dos artículos de como auto-publicar un libro usando bookdown, fueron premiados por RStudio en el [1st Bookdown Contest](https://community.rstudio.com/t/announcing-winners-of-the-1st-bookdown-contest/16394). 
+
+El objetivo es que puedan acercarse con un enfoque intutitivo y práctico al mundo de la ciencia con datos, el arte del descubrimiento.
+
+
+### ¿De qué se trata?
 
 Es un libro para aprender ciencia de datos, machine learning and análisis de datos con toneladas de ejemplos y explicaciones alrededor de distintos tópicos como:
 
@@ -70,7 +74,7 @@ No hay diferencia entre las versiones digital y web :)
 
 Después de la compra recibirás un correo electrónico para descargarlo en los tres formatos.
 
-<font size="+2"><b><a href="https://gumroad.com/l/tORBv" target="blank">Descargue aquí!</a> </b></font>
+<font size="+2"><b><a href="https://librovivodecienciadedatos.ai/descargar-libro.html" target="blank">Descargue aquí!</a> </b></font>
 
 <br>
 
