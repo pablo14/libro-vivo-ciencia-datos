@@ -15,6 +15,8 @@ description: "Un enfoque intuitivo y práctico en machine learning, con análisi
 linestretch: 1.15
 linkcolor: NavyBlue
 links-as-notes: true
+url: 'https\://librovivodecienciadedatos.ai/'
+twitter-handle: pabloc_ds
 ---
 
 
