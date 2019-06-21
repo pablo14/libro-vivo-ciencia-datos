@@ -1539,7 +1539,7 @@ profiling_num(df_1$var)
 
 
 
-Aquí podemos ver varios indicadores que nos dan algunas pistas. El desvío estándar `std_dev` es realmente alto comparado con el promedio `mean`, y eso se refleja en el coeficiente de variación `variation_coef`. Además, la curtosis es alta (16) y el valor de `p_99` es casi el doble que el de `p_95` (5767 vs. 3382).
+Aquí podemos ver varios indicadores que nos dan algunas pistas. El desvío estándar `std_dev` es realmente alto comparado con el promedio `mean`, y eso se refleja en el coeficiente de variación `variation_coef`. Además, la curtosis es alta (16) y el valor de `p_99` es casi el doble que el de `p_95` (5467 vs. 3382).
 
 
 _Esta última tarea de mirar algunos números y visualizar la distribución de la variable es como imaginar una fotografía por lo que otra persona nos dice: convertimos la voz (que es una señal) en una imagen en nuestro cerebro._ `r emo::ji("speaking_head")` `r emo::ji("roll_eyes")` ... => `r emo::ji("mountain_snow")` 
