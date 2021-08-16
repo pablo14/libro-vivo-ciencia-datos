@@ -6,6 +6,7 @@ if(!knitr:::is_html_output())
   knitr::opts_chunk$set(fig.pos = 'H')
 
 }
+source('./emojis.R')
 ```
 
 # Selección de las mejores variables {#seleccion_mejores_variables}
@@ -292,7 +293,7 @@ detach("package:caret")
 
 ### Pequeño ejemplo (basado en la Teoría de la información)
 
-Consideren la siguiente tabla de _big data_ `r emo::ji("stuck_out_tongue_winking_eye")`  4 filas, 2 variables de entrada (`var_1`, `var_2`) y un resultado (`target`):
+Consideren la siguiente tabla de _big data_ `r wemoji("stuck_out_tongue_winking_eye")`  4 filas, 2 variables de entrada (`var_1`, `var_2`) y un resultado (`target`):
 
 ```{r variables-work-in-groups-2, echo=FALSE, out.width="200px", fig.cap="La unión hace a la fuerza: Combinar variables", out.extra=""}
 knitr::include_graphics("selecting_best_variables/variables_work_in_gropus.png")
@@ -306,7 +307,7 @@ Si creamos un modelo predictivo basado solamente en `var_1`, ¿qué _verá_ este
 _El mismo análisis aplica para `var_2`_
 
 Cuando los mismos datos ingresados están relacionados con diferentes resultados lo definimos como **ruido**. La intuición es lo mismo que una persona diciéndonos: _"Hey, ¡mañana va a llover!"_, y otra persona diciéndonos _"Es seguro que mañana no va a llover"_.
-Pensaríamos... _"¡Dios mío! ¿Necesito el paraguas o no `r emo::ji("scream")`?"_
+Pensaríamos... _"¡Dios mío! ¿Necesito el paraguas o no `r wemoji("scream")`?"_
 
 Volviendo al ejemplo, al tomar las dos variables en simultáneo, la correspondencia entre los datos ingresados y el resultado es única: "Si `var_1='a'` y `var_2='x'` entonces la probabilidad de `target='red'` es 100%". Pueden probar otras combinaciones.
 

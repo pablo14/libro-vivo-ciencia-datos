@@ -5,6 +5,7 @@ if(!knitr:::is_html_output())
   knitr::opts_chunk$set(tidy.opts=list(width.cutoff=56, indent = 2), tidy = TRUE)
   knitr::opts_chunk$set(fig.pos = 'H')
 }
+source('./emojis.R')
 ```
 
 # Preparación de datos {#preparacion_de_datos}
@@ -62,9 +63,9 @@ Este libro sugiere utilizar las variables binarias como numéricas cuando `0` es
 
 Algunos algoritmos funcionan de la siguiente manera:
 
-* `r emo::ji("bar_chart")` Sólo con datos categóricos
-* `r emo::ji("straight_ruler")` Sólo con datos numéricos
-* `r emo::ji("bar_chart")``r emo::ji("straight_ruler")` Con ambos tipos
+* `r wemoji("bar_chart")` Sólo con datos categóricos
+* `r wemoji("straight_ruler")` Sólo con datos numéricos
+* `r wemoji("bar_chart")``r wemoji("straight_ruler")` Con ambos tipos
 
 Además, no todos los modelos predictivos pueden manejar **valores faltantes**. 
 
@@ -346,7 +347,7 @@ Noten que solo es necesario definir el valor máximo de cada segmento.
 
 Por lo general, no sabemos cuál es el valor mínimo o máximo. En esos casos, podemos utilizar los valores `-Inf` e `Inf`. De lo contrario, si definimos un valor que está fuera del rango, `cut` le asignará el valor `NA`.
 
-Es una buena práctica asignar el valor mínimo y máximo usando una función. En este caso, la variable es un porcentaje, por lo que sabemos de antemano que su escala es de 0 a 100; sin embargo, `r emo::ji("warning")` _¿qué pasaría si no conociéramos el rango?_ 
+Es una buena práctica asignar el valor mínimo y máximo usando una función. En este caso, la variable es un porcentaje, por lo que sabemos de antemano que su escala es de 0 a 100; sin embargo, `r wemoji("warning")` _¿qué pasaría si no conociéramos el rango?_ 
 
 La función devolverá `NA` para aquellos valores por debajo o por encima de los puntos de corte. Una solución es obtener valores mínimos y máximos variables:
 
@@ -394,7 +395,7 @@ describe(d_stunt_grp$stunt_child_ef)
 ```
 
 
-**¡Todos los segmentos cambiaron!** `r emo::ji("scream")` Dado que estas son nuevas categorías, el modelo predictivo fallará a la hora de procesarlas porque son todos valores nuevos.
+**¡Todos los segmentos cambiaron!** `r wemoji("scream")` Dado que estas son nuevas categorías, el modelo predictivo fallará a la hora de procesarlas porque son todos valores nuevos.
 
 La solución es conservar los puntos de corte cuando preparamos los datos. Luego, ejecutamos el modelo en producción, utilizamos el segmento de discretización manual y, así, forzamos que cada caso quede en la categoría correspondiente. De esta manera, el modelo predictivo siempre _ve_ lo mismo.
 
@@ -558,7 +559,7 @@ Los valores más comunes para el número de segmentos suelen ser 3, 5, 10 ó 20 
 
 <br>
 
-#### Bonus track: El arte del equilibrio `r emo::ji("balance_scale")`
+#### Bonus track: El arte del equilibrio `r wemoji("balance_scale")`
 
 - Alta cantidad de segmentos => Más ruido capturado
 - Baja cantidad de segmentos => Demasiada simplificación, menos varianza.
@@ -588,7 +589,7 @@ Cuando trabajamos con variables categóricas, podemos cambiar su distribución r
 
 <br> 
 
-### Bonus track `r emo::ji("boom")`
+### Bonus track `r wemoji("boom")`
 
 Volvamos a la sección sobre discretización de variables y grafiquemos todas las transformaciones que hemos visto hasta ahora:
 
@@ -756,7 +757,7 @@ freq(data_country, "has_flu")
 
 <br>
 
-### El caso `r emo::ji("mag")` {#analizar-resultados-binarios-vs-variable-categorica}
+### El caso `r wemoji("mag")` {#analizar-resultados-binarios-vs-variable-categorica}
 
 El modelo predictivo intentará mapear ciertos valores con ciertos resultados, en nuestro caso la variable objetivo es binaria.
 
@@ -814,7 +815,7 @@ Sin considerar el filtro por país, tenemos:
 
 ---
 
-### Análisis para el modelado predictivo `r emo::ji("crystal_ball")`
+### Análisis para el modelado predictivo `r wemoji("crystal_ball")`
 
 Cuando desarrollamos modelos predictivos, puede que nos interesen aquellos valores que aumentan la probabilidad de un determinado evento. En nuestro caso:
 
@@ -1069,7 +1070,7 @@ La nueva curva ROC es (`new_roc`): `r new_roc`.
 
 Luego calculamos el procentaje de mejora con respecto al primer valor de ROC:
 
-**Mejora: ~ `r round(100*(new_roc-roc)/roc,2)`%**. `r emo::ji("white_check_mark")`
+**Mejora: ~ `r round(100*(new_roc-roc)/roc,2)`%**. `r wemoji("white_check_mark")`
 
 Nada mal, ¿no?
 
@@ -1109,7 +1110,7 @@ Esto está relacionado con **Ingeniería de variables**. Además, está relacion
 
 ---
 
-### Variable objetivo numérica o multinomial `r emo::ji("straight_ruler")`
+### Variable objetivo numérica o multinomial `r wemoji("straight_ruler")`
 
 Hasta ahora, el libro sólo cubrió casos donde la variable objetivo era una variable binaria. Está previsto que en el futuro abarque también variables objetivo numéricas y multi-valor.
 
@@ -1119,7 +1120,7 @@ Lo mismo ocurre con la variable de salida multinomial, habrá algunas categoría
 
 <br>
 
-### ¿Qué beneficio "extra" `r emo::ji("gift")` obtuvimos con la agrupación?
+### ¿Qué beneficio "extra" `r wemoji("gift")` obtuvimos con la agrupación?
 
 Saber cómo las categorías fueron asignadas a los grupos nos brinda información que -en algunos casos- es bueno registrar. Las categorías que pertenezcan a un mismo grupo van a tener un comportamiento similar -en términos de representatividad y poder predictivo.
 
@@ -1216,7 +1217,7 @@ ggplot(df_1, aes(var, fill=var)) + geom_histogram(bins=20) + theme_light()
 ```
 
 La variable está sesgada hacia la izquierda, mostrando algunos puntos atípicos a la derecha. Queremos _lidiar con ellos_.
-(`r emo::ji("sunglasses")`). Entonces, surge la pregunta: _¿Dónde definimos el umbral de lo extremo?_ Basándonos en la intuición, puede ser el 1% más alto, o podemos analizar cómo cambia el promedio si quitamos el 1% más alto.
+(`r wemoji("sunglasses")`). Entonces, surge la pregunta: _¿Dónde definimos el umbral de lo extremo?_ Basándonos en la intuición, puede ser el 1% más alto, o podemos analizar cómo cambia el promedio si quitamos el 1% más alto.
 
 Ambos casos podrían estar bien. De hecho, tomar otro número como el umbral (es decir, 2% o 0,1%), también puede ser correcto. Vamos a visualizarlos:
 
@@ -1282,9 +1283,9 @@ knitr::include_graphics("data_preparation/where_is_the_cutpoint.png")
 
 
 Cerca del Ecuador, una temperatura cerca de los 10ºC (50ºF) probablemente sea un valor extremadamente bajo; sin embargo, en la Antártida, ¡sería un día de playa!
-`r emo::ji("snowman")` `r emo::ji("beach_umbrella")`
+`r wemoji("snowman")` `r wemoji("beach_umbrella")`
 
-`r emo::ji("japanese_goblin")`: _"¡Oh! ¡Pero eso sería tomar un ejemplo extremo con dos locaciones diferentes!"_
+`r wemoji("japanese_goblin")`: _"¡Oh! ¡Pero eso sería tomar un ejemplo extremo con dos locaciones diferentes!"_
 
 ¡No hay problema! Hagamos zoom a una ciudad, como un fractal, el límite donde una empieza (y otra termina) no tendrá un único valor para determinar lo siguiente: _"Ok, el clima cálido empieza en los 25.5ºC (78ºF)."_ 
 
@@ -1292,7 +1293,7 @@ Es relativo.
 
 Sin embargo, es bastante fácil pararse en los extremos, donde la incertidumbre disminuye a casi cero. Por ejemplo, cuando consideramos una temperatura de 60ºC (140ºF).
 
-`r emo::ji("thinking")`: _"Ok. Pero, ¿cómo se relacionan estos conceptos con machine learning?"_
+`r wemoji("thinking")`: _"Ok. Pero, ¿cómo se relacionan estos conceptos con machine learning?"_
 
 Estamos exponiendo aquí la relatividad que existe al considerar una etiqueta (cálido/frío) como una variable numérica (temperatura). Esto puede ser considerado para cualquier otra variable numérica, como los ingresos económicos y las etiquetas "normal" y "anormal".
 
@@ -1308,7 +1309,7 @@ La definición de estos límites es una de las tareas más comunes en _machine l
 
 * Ejemplo 2: Otro ejemplo se da cuando necesitamos discretizar una variable numérica porque necesitamos que sea categórica. Los límites en cada segmento afectarán al resultado general. Hay más información sobre esto en la sección [Discretizando variables numéricas](#discretizando_variables_numericas) 
 
-`r emo::ji("pushpin")` Volviendo al problema original (_¿Dónde termina el clima frío?_), no todas las preguntas necesitan una respuesta: algunas solamente nos ayudan a pensar.
+`r wemoji("pushpin")` Volviendo al problema original (_¿Dónde termina el clima frío?_), no todas las preguntas necesitan una respuesta: algunas solamente nos ayudan a pensar.
 
 <br>
 
@@ -1323,7 +1324,7 @@ Algunos modelos, como el bosque aleatorio y las máquinas de potenciación del g
 Un aspecto que contribuye a la disminución del impacto es que ambos modelos crean _muchos_ sub-modelos. Si cualquiera de los modelos toma un valor atípico como información, entonces otros sub-modelos probablemente no lo harán; por lo tanto, el error se cancela. El equilibrio yace en la pluralidad de voces.
 
 
-#### Comunicar los resultados `r emo::ji("earth_africa")` `r emo::ji("mega")`
+#### Comunicar los resultados `r wemoji("earth_africa")` `r wemoji("mega")`
 
 Si debemos informar cuáles fueron las variables utilizadas en el modelo, terminaremos quitando los valores atípicos para no mostrar un histograma con una sola barra y/o un sesgo en el promedio. 
 
@@ -1332,7 +1333,7 @@ Es mejor mostrar un número no sesgado que justificar que el modelo _podrá lidi
 #### Tipos de valores atípicos según el tipo de datos
 
 
-* **Numéricos** `r emo::ji("straight_ruler")`: como los que vimos antes:
+* **Numéricos** `r wemoji("straight_ruler")`: como los que vimos antes:
 
 ```{r numerical-outliers-1, echo=FALSE, fig.cap="Variable numérica con valores atípicos", out.extra=''}
 
@@ -1346,7 +1347,7 @@ ggplot(df_1, aes(var)) + geom_histogram(bins=20) +
 ```
 
 
-* **Categóricos** `r emo::ji("bar_chart")`: Tener una variable en la que la dispersión de la categorías es bastante alta (alta cardinalidad): por ejemplo, código postal. Hay más información sobre cómo lidiar con valores atípicos en variables categóricas en el capítulo [Variables de alta cardinalidad en estadística descriptiva](#alta_cardinalidad_estadistica_descriptiva).
+* **Categóricos** `r wemoji("bar_chart")`: Tener una variable en la que la dispersión de la categorías es bastante alta (alta cardinalidad): por ejemplo, código postal. Hay más información sobre cómo lidiar con valores atípicos en variables categóricas en el capítulo [Variables de alta cardinalidad en estadística descriptiva](#alta_cardinalidad_estadistica_descriptiva).
 
 ```{r categorical-outliers-1, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Variable categórica con valores atípicos", out.extra=''}
 library(funModeling)
@@ -1391,7 +1392,7 @@ tbl_hello_world=table(df_hello_world)
 round(100*prop.table(tbl_hello_world), 2)
 ```
 
-¡Oh `r emo::ji("scream")`! La combinación de `Argentina` y `cat_B` es _realmente baja_ (0.75%) en comparación con los otros valores (menos del 1%), mientras que las otras intersecciones están por encima del 22%.
+¡Oh `r wemoji("scream")`! La combinación de `Argentina` y `cat_B` es _realmente baja_ (0.75%) en comparación con los otros valores (menos del 1%), mientras que las otras intersecciones están por encima del 22%.
 
 <br>
 
@@ -1419,7 +1420,7 @@ El núcleo es el siguiente:
 
 <br>
 
-### Paso 1: Cómo detectar valores atípicos `r emo::ji("mag_right")`
+### Paso 1: Cómo detectar valores atípicos `r wemoji("mag_right")`
 
 Los siguientes métodos se implementan en la función `prep_outliers`. Obtienen diferentes resultados para que el usuario pueda seleccionar los que mejor se ajustan a sus necesidades.
 
@@ -1503,9 +1504,9 @@ hampel_outlier(heart_disease$age, k_mad_value = 6)
 
 ---
   
-### Paso 2: ¿Qué hacemos con los valores atípicos? `r emo::ji("hammer_and_wrench")`
+### Paso 2: ¿Qué hacemos con los valores atípicos? `r wemoji("hammer_and_wrench")`
 
-Ya detectamos qué puntos son los atípicos. Ahora, la pregunta es _¿Qué hacemos con ellos?_ `r emo::ji("thinking")`
+Ya detectamos qué puntos son los atípicos. Ahora, la pregunta es _¿Qué hacemos con ellos?_ `r wemoji("thinking")`
 
 Hay dos escenarios posibles:
 
@@ -1542,7 +1543,7 @@ profiling_num(df_1$var)
 Aquí podemos ver varios indicadores que nos dan algunas pistas. El desvío estándar `std_dev` es realmente alto comparado con el promedio `mean`, y eso se refleja en el coeficiente de variación `variation_coef`. Además, la curtosis es alta (16) y el valor de `p_99` es casi el doble que el de `p_95` (5467 vs. 3382).
 
 
-_Esta última tarea de mirar algunos números y visualizar la distribución de la variable es como imaginar una fotografía por lo que otra persona nos dice: convertimos la voz (que es una señal) en una imagen en nuestro cerebro._ `r emo::ji("speaking_head")` `r emo::ji("roll_eyes")` ... => `r emo::ji("mountain_snow")` 
+_Esta última tarea de mirar algunos números y visualizar la distribución de la variable es como imaginar una fotografía por lo que otra persona nos dice: convertimos la voz (que es una señal) en una imagen en nuestro cerebro._ `r wemoji("speaking_head")` `r wemoji("roll_eyes")` ... => `r wemoji("mountain_snow")` 
 
 <br>
 
@@ -1818,7 +1819,7 @@ En **modelado predictivo**, aquellos que tienen algún tipo de técnica de remue
 
 En algunos casos, cuando el modelo predictivo está **ejecutándose en producción**, es recomendable reportar o considerar la preparación de cualquier valor extremo nuevo, es decir, un valor que no estaba presente durante la construcción del modelo. Hay más información sobre este tema, pero con una variable categórica, en [Variables de alta cardinalidad en modelado predictivo](#alta_cardinalidad_modelo_predictivo), sección: _Manejo de nuevas categorías cuando el modelo predictivo está en producción_.
 
-**Una buena prueba** para que haga el lector es tomar un conjunto de datos, tratar los valores atípicos, y luego comparar algunas métricas de desempeño como Kappa, ROC, Precisión (_Accuracy_), etc.; **¿La preparación de los datos mejoró alguna de ellas?** O, en los reportes, ver cuánto cambia el promedio. Incluso graficando, ¿ahora el gráfico nos dice algo? De esta manera, el lector creará nuevo conocimiento basándose en su experiencia.`r emo::ji("wink")`.
+**Una buena prueba** para que haga el lector es tomar un conjunto de datos, tratar los valores atípicos, y luego comparar algunas métricas de desempeño como Kappa, ROC, Precisión (_Accuracy_), etc.; **¿La preparación de los datos mejoró alguna de ellas?** O, en los reportes, ver cuánto cambia el promedio. Incluso graficando, ¿ahora el gráfico nos dice algo? De esta manera, el lector creará nuevo conocimiento basándose en su experiencia.`r wemoji("wink")`.
 
 <br>
 
@@ -1852,7 +1853,7 @@ Si todo sale bien, después de estudiar el capítulo entero, el lector podrá en
 * Transformación e imputación de variables numéricas y categóricas.
 * Imputar valores: desde enfoques simples a algunos más complejos.
 
-Ejemplificaremos estos temas con un enfoque práctico en R. Este código busca ser lo suficientemente genérico para que lo puedan aplicar en sus proyectos `r emo::ji("slightly_smiling_face")`.
+Ejemplificaremos estos temas con un enfoque práctico en R. Este código busca ser lo suficientemente genérico para que lo puedan aplicar en sus proyectos `r wemoji("slightly_smiling_face")`.
 
 <br>
 
@@ -1921,7 +1922,7 @@ En algunos casos, una variable es medida _después_ de un período de tiempo, po
 
 A veces hay casos aleatorios, como una máquina que falla al recoletar datos o un usuario que se olvidó de completar algún campo en un formulario, entre otros.
 
-Aquí aparece una pregunta importante: _¿Qué hacemos?_ `r emo::ji("scream")`
+Aquí aparece una pregunta importante: _¿Qué hacemos?_ `r wemoji("scream")`
 
 Las siguientes recomendaciones son simplemente eso, recomendaciones. Pueden probar diferentes enfoques para descubrir cuál es la mejor estrategia para los datos que están analizando. **No existe un "talle único y universal" en esto**.
 
@@ -2250,7 +2251,7 @@ Por ejemplo, si estamos prediciendo un evento binario y el evento menos represen
 
 Como un comentario extra con respecto a la ultima visualización, fue importante configurar el máximo del eje-y en 30 para que los dos gráficos fueran comparables entre sí.
 
-Como pueden ver, existe una interrelación entre todos los conceptos. `r emo::ji("wink")`.
+Como pueden ver, existe una interrelación entre todos los conceptos. `r wemoji("wink")`.
 
 <br>
   
@@ -2403,7 +2404,7 @@ La variable original contiene 35 valores `NA` que fueron reemplazados con la mod
 
 #### Método 2: Usar el enfoque MICE 
 
-**Consejo:** Como primer abordaje en la imputación de los valores faltantes, este método es sumamente complejo. `r emo::ji("fearful")`. 
+**Consejo:** Como primer abordaje en la imputación de los valores faltantes, este método es sumamente complejo. `r wemoji("fearful")`. 
 
 MICE significa "Imputación Multivariada por ecuaciones encadenadas" (_"Multivariate Imputation by Chained Equations"_ en inglés), también se la conoce como "Especificación totalmente condicional" (_"Fully Conditional Specification"_). Este libro cubre este tema debido a su popularidad.
 
@@ -2643,7 +2644,7 @@ plot(y3, xlab = "time (hs)", col="coral")
 sprintf("Min value after 10,000 hours: %s", min(y3))
 ```
 
-_¡Seguimos sin llegar a cero! ¡¿Cuánto tiempo necesitamos?!_ `r emo::ji("scream")`
+_¡Seguimos sin llegar a cero! ¡¿Cuánto tiempo necesitamos?!_ `r wemoji("scream")`
 
 
 Como habrán notado, es probable que lleguemos a cero en el infinito... Estamos ante una [Asíntota](https://es.wikipedia.org/wiki/As%C3%ADntota).
@@ -2684,7 +2685,7 @@ Se lo puede definir como la pérdida de un cliente u oportunidad.
 
 En el **análisis de señales cerebrales**, si estas señales provienen de la corteza visual en un proyecto en el que, por ejemplo, necesitamos predecir qué tipo de imagen está mirando el paciente, entonces los primeros 40ms de valores no sirven porque es el tiempo que el cerebro necesita para empezar a procesar la señal.
 
-Pero esto también ocurre en _"la vida real"_, como cuando escribimos un libro de análisis de datos para todas las edades, ¿cuánto tiempo necesitamos para terminarlo? ¿Una cantidad infinita? Probablemente no. `r emo::ji("smile")`.
+Pero esto también ocurre en _"la vida real"_, como cuando escribimos un libro de análisis de datos para todas las edades, ¿cuánto tiempo necesitamos para terminarlo? ¿Una cantidad infinita? Probablemente no. `r wemoji("smile")`.
 
 
 <br>

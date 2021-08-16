@@ -1,10 +1,13 @@
+```{r include = FALSE}
+source('./emojis.R')
+```
 # Descargar libro {#descargar-libro}
 
-Si les gustó el libro y quieren apoyar el proyecto, pueden adquirir para siempre y toda la eternidad el **Libro Vivo de Ciencia de Datos** portátil en versión PDF, mobi, y Kindle. ¡Las tres juntas! `r emo::ji("slightly_smiling_face")`. 
+Si les gustó el libro y quieren apoyar el proyecto, pueden adquirir para siempre y toda la eternidad el **Libro Vivo de Ciencia de Datos** portátil en versión PDF, mobi, y Kindle. ¡Las tres juntas! `r wemoji("slightly_smiling_face")`. 
 
 <br> 
 
-Compra segura por **Gumroad** `r emo::ji("closed_lock_with_key")`: 
+Compra segura por **Gumroad** `r wemoji("closed_lock_with_key")`: 
 
 _Nota: Intenten desactivar la extensión 'Ghostery' durante la compra, se sabe que tiene algunos problemas._ 
 
@@ -29,15 +32,15 @@ _¿Qué pasa si sale una nueva versión? / ¿Puedo acceder a las versiones más 
 
 ¡Claro! Después de la compra, cada tanto serán notificados vía e-mail sobre la publicación de una nueva versión (pueden desactivar esta notificación).
 
-La modalidad es que cada uno le asigna el precio que considere justo, con un mínimo de 5 dólares estadounidenses. ¡Feliz lectura! `r emo::ji("rocket")`
+La modalidad es que cada uno le asigna el precio que considere justo, con un mínimo de 5 dólares estadounidenses. ¡Feliz lectura! `r wemoji("rocket")`
 
 _¿Cómo puedo contactar al autor?_
 
 Si desean contactarme pueden hacerlo a pcasas.biz <arroba> gmail.com, no necesitan un motivo específico; ¡puede ser por cualquier cosa, desde sugerir un nuevo tema hasta simplemente compartir una buena experiencia que tuvieron al aplicar algún concepto que aprendieron aquí, es bienvenida!
 
 
-`r emo::ji("worried")`: _No tengo suficiente dinero para contribuir, pero igual *realmente* quiero la versión portátil._
-No hay problema, todos hemos pasado por malos momentos, simplemente escríbanme a pcasas.biz (arroba) gmail.com `r emo::ji("wink")`.
+`r wemoji("worried")`: _No tengo suficiente dinero para contribuir, pero igual *realmente* quiero la versión portátil._
+No hay problema, todos hemos pasado por malos momentos, simplemente escríbanme a pcasas.biz (arroba) gmail.com `r wemoji("wink")`.
 
 Me gusta la idea de tener -cuando es posible- acceso gratuito a la educación, tal es el caso de la educación universitaria en Argentina, Finlandia (entre otros pocos países). Es por eso que cualquiera que desee estudiar y explorar nuevos horizontes puede hacerlo. El dinero no debería ser una barrera a la hora de adquirir conocimiento.
 
