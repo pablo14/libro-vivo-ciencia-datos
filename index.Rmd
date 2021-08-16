@@ -68,6 +68,12 @@ knitr::include_graphics("introduction/Desembarcando_en_R.png")
 
 Con el curso **[Desembarcando en R](https://www.udemy.com/desembarcando-en-r)**, podrán obtener una gentil introducción a los aspectos mas distintivos de R, mediante sus 11 laboratorios y 19 videos de programación cortos.
 
+
+Pueden inscribirse gratis a al curso: **[Desembarcando en R > 2da Edición!](https://escueladedatosvivos.ai/p/curso-desembarcando-en-r-2da-edicion-gratis). La 1ra edición tuvo mas de 6000 inscriptos. 
+
+Este curso, y otros mas, son parte de la nueva [Escuela de Datos Vivos](https://escueladedatosvivos.ai/).
+
+
 Es un curso complementario a este libro. Solo se requieren conocimientos básicos de programación.
 
 Modalidad 100% práctica, se ven introducciones a las librerías R Base, `tidyverse`, `funModeling`, `Hmisc`, `randomForest`. Al final de cada laboratorio se plantean ejercicios (con su resolución).

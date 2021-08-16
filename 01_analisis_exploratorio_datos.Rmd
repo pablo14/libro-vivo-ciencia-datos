@@ -114,7 +114,7 @@ La función `df_status` toma un data frame y genera una _tabla de estado_ que no
 
 ```{r profiling-data}
 # Analizar los datos ingresados
-my_data_status=df_status(heart_disease, print_results = F)
+my_data_status=df_status(heart_disease)
 
 # Quitar las variables que tienen un 60% de valores cero
 vars_to_remove=filter(my_data_status, p_zeros > 60)  %>% .$variable
@@ -460,12 +460,10 @@ Para leer un repaso completo de asimetría y curtosis, diríjanse a las Referenc
 
 La idea de la función `profiling_num` es proveer al científico de datos un conjunto completo de métricas para que pueda seleccionar las más relevantes. Esto se puede hacer fácilmente utilizando la función `select` del paquete `dplyr`. 
 
-Además, debemos configurar en `profiling_num` el parámetro `print_results = FALSE`. De esta forma, evitamos visualizar en la consola.
-
 Por ejemplo, probemos con `mean`,  `p_01`,  `p_99` y `range_80`:
 
 ```{r}
-my_profiling_table=profiling_num(data_world_wide, print_results = FALSE) %>% select(variable, mean, p_01, p_99, range_80)
+my_profiling_table=profiling_num(data_world_wide) %>% select(variable, mean, p_01, p_99, range_80)
 
 # Visualizar sólo las primeras tres filas
 head(my_profiling_table, 3)

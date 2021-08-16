@@ -9,7 +9,7 @@ create_book <- function(type)
     rmarkdown::render_site(output_format =
                              bookdown::pdf_book(template='template.tex',
                                                 latex_engine = "pdflatex",
-                                                toc_unnumbered=F))
+                                                toc_unnumbered=F));beepr::beep()
     beepr::beep()
   } else if(type=='html'){
     rmarkdown::render_site(output_format = 'bookdown::gitbook',

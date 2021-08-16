@@ -86,7 +86,7 @@ library(dplyr) # librería de data munging
 library(funModeling) # df_status function
   
 # Comprobar variables categóricas
-status=df_status(heart_disease, print_results = F)
+status=df_status(heart_disease)
 filter(status,  type %in% c("factor", "character")) %>% select(variable)
 
 # Convierte todas las variables categóricas (factor y carácter) en variables numéricas.
@@ -416,7 +416,7 @@ library(dplyr)
 Veamos un ejemplo. Primero, corroboramos los tipos de datos actuales:
 
 ```{r}
-df_status(heart_disease, print_results = F) %>% select(variable, type, unique, q_na) %>% arrange(type)
+df_status(heart_disease) %>% select(variable, type, unique, q_na) %>% arrange(type)
 ```
 
 Tenemos variables factor, enteras, y numéricas: ¡una buena mezcla! La transformación tiene dos pasos. Primero, obtiene los valores de corte o de umbral donde comienza cada segmento. El segundo paso es utilizar el umbral para obtener las variables como categóricas.
@@ -1562,10 +1562,10 @@ Ahora verificamos cuántos valores `NA` había antes (la variable original) y de
 
 ```{r}
 # Antes
-df_status(df_1$var, print_results = F) %>% select(variable, q_na, p_na)
+df_status(df_1$var) %>% select(variable, q_na, p_na)
 
 # Después
-df_status(df_1$var_tukey, print_results = F) %>% select(variable, q_na, p_na)
+df_status(df_1$var_tukey) %>% select(variable, q_na, p_na)
 ```
 
 Antes de la transformación, había 0 valores `NA`, mientras que después 120 valores (cerca del 12%) fueron marcados como atípicos de acuerdo a la prueba de Tukey y reemplazados por `NA`.
@@ -1573,7 +1573,7 @@ Antes de la transformación, había 0 valores `NA`, mientras que después 120 va
 Podemos comparar el antes y el después:
 
 ```{r}
-profiling_num(df_1, print_results = F) %>% select(variable, mean, std_dev, variation_coef, kurtosis, range_98)
+profiling_num(df_1) %>% select(variable, mean, std_dev, variation_coef, kurtosis, range_98)
 ```
 
 El promedio disminuyó casi en una tercera parte, y todas las demás métricas también disminuyeron.
@@ -1589,7 +1589,7 @@ df_1$var_hampel=prep_outliers(df_1$var, type = "set_na", method="hampel")
 Verificando...
 
 ```{r}
-df_status(df_1, print_results = F) %>% select(variable, q_na, p_na)
+df_status(df_1) %>% select(variable, q_na, p_na)
 ```
 
 Este último método es mucho más severo al identificar valores atípicos, marcando el 36% de los valores como atípicos. Es probable que esto se deba a que la variable está _bastante_ sesgada hacia la izquierda.
@@ -1615,8 +1615,8 @@ Por favor noten que el valor de 2% fue asignado arbitrariamente. También pueden
 Tomaremos algunos indicadores para realizar la comparación cuantitativa.
 
 ```{r}
-df_status(df_1, print_results = F) %>% select(variable, q_na, p_na)
-prof_num=profiling_num(df_1, print_results = F) %>% select(variable, mean, std_dev, variation_coef, kurtosis, range_98)
+df_status(df_1) %>% select(variable, q_na, p_na)
+prof_num=profiling_num(df_1) %>% select(variable, mean, std_dev, variation_coef, kurtosis, range_98)
 prof_num
 ```
 
@@ -1709,8 +1709,8 @@ df_2_tukey=prep_outliers(data = df_2, input = c("var1", "var2"), type='stop', me
 Verificar algunas métricas antes y después de la imputación:
 
 ```{r outliers-treatment-4,  fig.height=3, fig.width=4}
-profiling_num(df_2, print_results = F) %>% select(variable, mean, std_dev, variation_coef)
-profiling_num(df_2_tukey, print_results = F) %>% select(variable, mean, std_dev, variation_coef)
+profiling_num(df_2) %>% select(variable, mean, std_dev, variation_coef)
+profiling_num(df_2_tukey) %>% select(variable, mean, std_dev, variation_coef)
 ```
 
 Tukey funcionó perfectamente esta vez, exponiendo un promedio más preciso para ambas variables: 1 para `var1` y 0 para `var2`.
@@ -1756,7 +1756,7 @@ tail(df_2_tukey$var1[order(df_2_tukey$var1)], 5)
 Y verificamos que no haya ningún `NA`:
 
 ```{r}
-df_status(df_2_tukey, print_results = F) %>% select(variable, q_na, p_na)
+df_status(df_2_tukey) %>% select(variable, q_na, p_na)
 ```
 
 Bastante claro, ¿no?
@@ -1780,7 +1780,7 @@ df_2$bot_top_var2=prep_outliers(data=df_2$var2, type='stop', method = "bottom_to
 df_2_b=select(df_2, -var1)
 
 # Análisis numérico
-profiling_num(df_2_b, print_results = F) %>% select(variable, mean, std_dev, variation_coef, kurtosis, range_98)
+profiling_num(df_2_b) %>% select(variable, mean, std_dev, variation_coef, kurtosis, range_98)
 ```
 
 Los tres métodos muestran resultados muy similares con estos datos.
@@ -1944,7 +1944,7 @@ Inspeccionemos el conjunto de datos `heart_disease` con la función `df_status`,
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr) 
 library(funModeling) 
-df_status(heart_disease, print_results = F) %>% select(variable, q_na, p_na) %>% arrange(-q_na)
+df_status(heart_disease) %>% select(variable, q_na, p_na) %>% arrange(-q_na)
 ```
 
 `q_na` indica la cantidad de valores `NA` y `p_na` es el porcentaje. Pueden encontrar toda la información sobre la función `df_status` en el capítulo [Análisis numérico, La voz de los números](#analisis_numerico).
@@ -1980,7 +1980,7 @@ Estas exclusiones se pueden manejar fácilmente con la función `df_status`. El 
 
 ```{r}
 # Obtener nombres de variables que contienen valores NA
-vars_to_exclude=df_status(heart_disease, print_results = F) %>% filter(p_na > 0) %>% .$variable
+vars_to_exclude=df_status(heart_disease) %>% filter(p_na > 0) %>% .$variable
 
 # Verificar las variables a excluir
 vars_to_exclude
