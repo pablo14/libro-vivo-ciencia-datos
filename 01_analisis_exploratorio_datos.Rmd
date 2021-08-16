@@ -5,6 +5,7 @@ if(!knitr:::is_html_output())
   knitr::opts_chunk$set(tidy.opts=list(width.cutoff=56, indent = 2), tidy = TRUE)
   knitr::opts_chunk$set(fig.pos = 'H')
 }
+source('./emojis.R')
 ```
 
 # Análisis exploratorio de datos {#analisis_exploratorio_de_datos}

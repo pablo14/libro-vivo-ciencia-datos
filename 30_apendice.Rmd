@@ -5,6 +5,7 @@ if(!knitr:::is_html_output())
   knitr::opts_chunk$set(tidy.opts=list(width.cutoff=56, indent = 2), tidy = TRUE)
   knitr::opts_chunk$set(fig.pos = 'H')
 }
+source('./emojis.R')
 ```
 
 # APÉNDICE {#apendice}
@@ -315,7 +316,7 @@ library(funModeling)
 df_status(heart_disease)
 ```
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#estado-de-salud-de-un-conjunto-de-datos)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#estado-de-salud-de-un-conjunto-de-datos)]
 
 <br>
 
@@ -333,7 +334,7 @@ Notas:
 * `bins`: configura la cantidad de segmentos (10 por defecto).
 * `path_out`: indica el directorio donde se guardará el archivo; si tiene un valor, entonces el gráfico se exportará en formato jpeg. Para guardarlo en el directorio actual debe ser un punto: "."
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#graficar-variables-numericas)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#graficar-variables-numericas)]
 
 
 <br>
@@ -350,7 +351,7 @@ Nota:
 
 * `plot_num` y `profiling_num` automáticamente excluyen variables no numéricas
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#analisis-numerico-en-r)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#analisis-numerico-en-r)]
 
 <br>
 
@@ -375,7 +376,7 @@ Notas:
 * `path_out` indica el directorio donde se guardará el archivo; si tiene un valor, entonces el gráfico se exportará en formato jpeg. Para guardarlo en el directorio actual debe ser un punto: "."
 * `na.rm` indica si los valores `NA` deberían ser excluidos (`FALSE` por defecto).
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#analisis-variables-categoricas)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#analisis-variables-categoricas)]
 
 
 <br>
@@ -395,7 +396,7 @@ Notas:
 * Sólo se analizan las variables numéricas. La variable objetivo debe ser numérica.
 * Si la variable objetivo es categórica, entonces será convertida a numérica.
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#correlacion-lineal)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#correlacion-lineal)]
 
 
 <br>
@@ -411,7 +412,7 @@ var_rank_info(heart_disease, "has_heart_disease")
 Nota: Analiza variables numéricas y categóricas. También se utiliza con el método de discretización numérica como antes, tal como `discretize_df`.
 
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#seleccionar_factores_var_clas_info)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#seleccionar_factores_var_clas_info)]
 
 
 
@@ -433,7 +434,7 @@ Notas:
 * `input` puede ser numérica o categórica, y `target` debe ser una variable binaria (dos clases).
 * Si `input` está vacío, entonces se ejecutará para todas las variables.
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#analisis_objetivo_cross_plot)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#analisis_objetivo_cross_plot)]
 
 <br>
 
@@ -447,7 +448,7 @@ Es útil para explicar y reportar si una variable es importante o no.
 plotar(data=heart_disease, input = c("age", "oldpeak"), target="has_heart_disease", plot_type="boxplot")
 ```
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#analisis-numerico-diagramas-caja)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#analisis-numerico-diagramas-caja)]
 
 <br>
 
@@ -457,7 +458,7 @@ plotar(data=heart_disease, input = c("age", "oldpeak"), target="has_heart_diseas
 plotar(data=mtcars, input = "gear", target="cyl", plot_type="histdens")
 ```
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#analisis-numerico-histogramas-densidad)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#analisis-numerico-histogramas-densidad)]
 
 Notes:
 
@@ -485,7 +486,7 @@ Nota:
 
 Esta función se utiliza para analizar datos cuando necesitamos reducir la cardinalidad de las variables en el modelado predictivo.
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#alta_cardinalidad_modelo_predictivo)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#alta_cardinalidad_modelo_predictivo)]
 
 
 
@@ -528,7 +529,7 @@ Notas:
 * Los valores mín y máx de cada segmento serán `-Inf` e `Inf`, respectivamente.
 * Un cambio en la última versión de `funModeling` (1.6.7) puede alterar el resultado en algunos escenarios. Por favor verifiquen los resultados si están usando la versión 1.6.6. Más información sobre este cambio [aquí](https://s3.amazonaws.com/datascienceheroes.com/img/blog/changes_discretize_df.png).
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#discretizacion-datos)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#discretizacion-datos)]
 
 
 <br>
@@ -556,7 +557,7 @@ new_age=equal_freq(heart_disease$age, n_bins = 5)
 Hmisc::describe(new_age)
 ```
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#segmentacion-igual-frecuencia)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#segmentacion-igual-frecuencia)]
 
 Notas:
 
@@ -591,7 +592,7 @@ Las funciones `tukey_outlier` y `hampel_outlier` son utilizadas internamente en 
 tukey_outlier(heart_disease$resting_blood_pressure)
 ```
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#detectar-valores-atípicos-usando-método-Tukey)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#detectar-valores-atípicos-usando-método-Tukey)]
 
 <br>
 
@@ -601,7 +602,7 @@ tukey_outlier(heart_disease$resting_blood_pressure)
 hampel_outlier(heart_disease$resting_blood_pressure)
 ```
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#detectar-valores-atípicos-usando-método-Hampel)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#detectar-valores-atípicos-usando-método-Hampel)]
 
 
 <br>
@@ -643,7 +644,7 @@ Notas:
 * `method` puede ser: `bottom_top`, `tukey` o `hampel`.
 * `type` puede ser: `stop` o `set_na`. Si es `stop` todos los valores marcados como atípicos serán frenados en el umbral. Si es `set_na`, entonces los valores marcados serán tomados como `NA`.
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#como_lidiar_con_valores_atipicos_en_r)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#como_lidiar_con_valores_atipicos_en_r)]
 
 
 <br>
@@ -664,7 +665,7 @@ gain_lift(data=heart_disease, score='score', target='has_heart_disease')
 
 ```
 
-[`r emo::ji("mag_right")` [**Leer más aquí.**](#ganancia_y_lift)]
+[`r wemoji("mag_right")` [**Leer más aquí.**](#ganancia_y_lift)]
 
 <br>
 

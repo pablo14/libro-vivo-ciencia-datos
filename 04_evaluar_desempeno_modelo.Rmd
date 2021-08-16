@@ -10,6 +10,7 @@ if(!knitr:::is_html_output())
   knitr::opts_chunk$set(tidy.opts=list(width.cutoff=56, indent = 2), tidy = TRUE)
   knitr::opts_chunk$set(fig.pos = 'H')
 }
+source('./emojis.R')
 ```
 
 
@@ -383,7 +384,7 @@ La columna **Lift** representa la proporción entre `Gain` y la _ganancia por az
 
 <br>
 
-#### Usando el punto de corte `r emo::ji("scissors")`
+#### Usando el punto de corte `r wemoji("scissors")`
 
 ¿Qué valor del score alcanza el 30% de la población?
 Respuesta: `0.56`
@@ -434,7 +435,7 @@ knitr::include_graphics("introduction/spacer_bar.png")
 
 ### La intuición detrás
 
-Los eventos pueden ocurrir, o no... aunque no tenemos _el diario del lunes_`r emo::ji("newspaper")`, podemos hacer una buena suposición de cómo va a ser.
+Los eventos pueden ocurrir, o no... aunque no tenemos _el diario del lunes_`r wemoji("newspaper")`, podemos hacer una buena suposición de cómo va a ser.
 
 ```{r error-curve, echo=FALSE, out.width="170px"}
 knitr::include_graphics("scoring/cover.png")
@@ -460,7 +461,7 @@ Por ejemplo, al tener una variable objetivo con 4 valores diferentes, puede habe
 
 <br>
 
-#### ¡¿Qué dijo?! `r emo::ji("hushed")`
+#### ¡¿Qué dijo?! `r wemoji("hushed")`
 
 Algunos ejemplos:
 - ¿Este cliente va a comprar este producto?
@@ -517,7 +518,7 @@ Tal vez ya se entendió, pero el score generalmente se refiere a la clase menos 
 
 --- 
 
-`r emo::ji("raised_hand")` **Sintaxis en R** -_salteen esta sección si no quieren ver código_-
+`r wemoji("raised_hand")` **Sintaxis en R** -_salteen esta sección si no quieren ver código_-
 
 La siguiente oración devolverá el score:
 
@@ -535,7 +536,7 @@ Dado que la variable objetivo puede ser `no` o `yes`, entonces `[, 2]` devuelve 
 
 <br>
 
-### Todo se trata del punto de corte `r emo::ji("straight_ruler")`
+### Todo se trata del punto de corte `r wemoji("straight_ruler")`
 
 
 ```{r scoring-machine-learning-9, echo=FALSE, out.width="50%", fig.cap="Casos ordenados por score más alto", out.extra=''}
@@ -552,10 +553,10 @@ Esto sirve para ver cómo extraer la clase final teniendo por defecto el punto d
 
 Después de asignar el punto de corte, podemos ver los resultados de la clasificación obteniendo los famosos: 
 
-* `r emo::ji("white_check_mark")` **Verdadero Positivo** (VP): Es _verdad_ que la clasificación es _positiva_, o, "el modelo le acertó a la clase positiva (`yes`)".
-* `r emo::ji("white_check_mark")` **Verdadero Negativo** (VN): Lo mismo que antes, pero con la clase negativa (`no`).
-* `r emo::ji("x")` **Falso Positivo** (FP): Es _falso_ que la clasificación es _positiva_, o, "el modelo falló, predijo `yes` pero el resultado fue `no`"
-* `r emo::ji("x")` **Falso Negativo** (FN): Lo mismo que antes, pero con la clase negativa, "el modelo predijo un resultado negativo, pero fue positivo", o, "el modelo predijo `no`, pero la clase fue `yes`"
+* `r wemoji("white_check_mark")` **Verdadero Positivo** (VP): Es _verdad_ que la clasificación es _positiva_, o, "el modelo le acertó a la clase positiva (`yes`)".
+* `r wemoji("white_check_mark")` **Verdadero Negativo** (VN): Lo mismo que antes, pero con la clase negativa (`no`).
+* `r wemoji("x")` **Falso Positivo** (FP): Es _falso_ que la clasificación es _positiva_, o, "el modelo falló, predijo `yes` pero el resultado fue `no`"
+* `r wemoji("x")` **Falso Negativo** (FN): Lo mismo que antes, pero con la clase negativa, "el modelo predijo un resultado negativo, pero fue positivo", o, "el modelo predijo `no`, pero la clase fue `yes`"
 
 
 
@@ -570,11 +571,11 @@ knitr::include_graphics("scoring/tbl_example_4.png")
 
 Al igual que la filosofía Zen, el análisis de los extremos nos ayudará a encontrar el punto medio.
 
-`r emo::ji("thumbsup")` El mejor escenario es aquel en el que las tasas de **VP** y **VN** son 100%. Eso significa que el modelo predice correctamente todos los `yes` y todos los `no`; _(como resultado, las tasas de **FP** y **FN** son 0%)_.
+`r wemoji("thumbsup")` El mejor escenario es aquel en el que las tasas de **VP** y **VN** son 100%. Eso significa que el modelo predice correctamente todos los `yes` y todos los `no`; _(como resultado, las tasas de **FP** y **FN** son 0%)_.
 
-¡Pero esperen `r emo::ji("raised_hand")`! Si encontramos una clasificación perfecta, ¡probablemente se deba a un sobreajuste!
+¡Pero esperen `r wemoji("raised_hand")`! Si encontramos una clasificación perfecta, ¡probablemente se deba a un sobreajuste!
 
-`r emo::ji("thumbsdown")` El peor escenario -lo opuesto al último ejemplo- es aquel en el que las tasas de **FP** y **FN** son 100%. Ni siquiera la aleatoriedad puede lograr un escenario tan horrible.
+`r wemoji("thumbsdown")` El peor escenario -lo opuesto al último ejemplo- es aquel en el que las tasas de **FP** y **FN** son 100%. Ni siquiera la aleatoriedad puede lograr un escenario tan horrible.
 
 _¿Por qué?_ Si las clases están balanceadas, 50/50, al tirar una moneda acertaremos alrededor de la mitad de los resultados. Esta es la línea de base común para probar si el modelo es mejor que la aleatoriedad.
 
@@ -590,7 +591,7 @@ En el ejemplo provisto, la distribución de clases es 5 para `yes`, y 10 para `n
 
 #### Comparar resultados de clasificación
 
-`r emo::ji("question")` **Trivia**: Si un modelo predice correctamente este 33.3% (Tasa de VP=100%), ¿es un buen modelo?
+`r wemoji("question")` **Trivia**: Si un modelo predice correctamente este 33.3% (Tasa de VP=100%), ¿es un buen modelo?
 
 _Respuesta_: Depende de cuántos 'yes' predijo el modelo. 
 
@@ -707,7 +708,7 @@ knitr::include_graphics("scoring/percentage_2.png")
 ```
 
 
-Ahora el modelo captura el `100%` de los `yes` (VP), por lo que la cantidad total de `yes` producida por el modelo aumentó a `46.7%`, pero sin ningún costo, dado que los *VN y FP permanecieron iguales* `r emo::ji("thumbsup")` .
+Ahora el modelo captura el `100%` de los `yes` (VP), por lo que la cantidad total de `yes` producida por el modelo aumentó a `46.7%`, pero sin ningún costo, dado que los *VN y FP permanecieron iguales* `r wemoji("thumbsup")` .
 
 <br>
 
@@ -729,7 +730,7 @@ knitr::include_graphics("scoring/percentage_3.png")
 
 <br>
 
-Ahora la tasa de FP disminuyó a `10%` (de `20%`), y el modelo aún captura el `80%` de VP que es la misma tasa que la que obtuvimos con el punto de corte en `0.5` `r emo::ji("thumbsup")` .
+Ahora la tasa de FP disminuyó a `10%` (de `20%`), y el modelo aún captura el `80%` de VP que es la misma tasa que la que obtuvimos con el punto de corte en `0.5` `r wemoji("thumbsup")` .
 
 **Disminuir el punto de corte a `0.8` mejoró el modelo sin costo alguno.**
 

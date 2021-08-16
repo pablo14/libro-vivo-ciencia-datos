@@ -29,6 +29,7 @@ if(!knitr:::is_html_output())
   knitr::opts_chunk$set(tidy.opts=list(width.cutoff=56, indent = 2), tidy = TRUE)
   knitr::opts_chunk$set(fig.pos = 'H')
 }
+source('./emojis.R')
 ```
 
 
@@ -140,7 +141,7 @@ Es hora de la siguiente sección.
 
 <br>
 
-### ¿Las máquinas y la inteligencia artificial dominarán el mundo? `r emo::ji("scream")` {-}
+### ¿Las máquinas y la inteligencia artificial dominarán el mundo? `r wemoji("scream")` {-}
 
 Aunque es cierto que el poder de la computación está aumentando exponencialmente, la rebelión de las máquinas está lejos de ocurrir hoy en día.
 
@@ -159,7 +160,7 @@ _Por Jorge Drexler (músico, actor y doctor). Citada de la canción "Guitarra y 
 
 <br>
 
-Quizás, ¿podría esta ser la diferencia entre **machine learning** y **ciencia de datos**? ¿Una máquina que aprende vs. un ser humano haciendo ciencia con los datos? `r emo::ji("thinking")`
+Quizás, ¿podría esta ser la diferencia entre **machine learning** y **ciencia de datos**? ¿Una máquina que aprende vs. un ser humano haciendo ciencia con los datos? `r wemoji("thinking")`
 
 Una pregunta abierta.
 
@@ -183,7 +184,7 @@ for(i in 1:length(used_packages))
 }
 ```
 
-El paquete `funModeling` fue el origen de este libro: comenzó como un conjunto de funciones para ayudar al científico de datos en sus tareas _diarias_. Ahora su documentación evolucionó y se convirtió en este libro `r emo::ji("heart")`!
+El paquete `funModeling` fue el origen de este libro: comenzó como un conjunto de funciones para ayudar al científico de datos en sus tareas _diarias_. Ahora su documentación evolucionó y se convirtió en este libro `r wemoji("heart")`!
 
 Instalen cualquiera de estas utilizando: `install.packages("PACKAGE_NAME")`.
 
@@ -191,7 +192,7 @@ El Entorno de Desarrollo Integrado (IDE por Integrated Development Environment e
 
 Este libro, tanto en PDF como formato web, fue creado en Rstudio, usando el increíble [Bookdown](https://bookdown.org/yihui/bookdown/).
 
-Todo es gratis y de código abierto, Bookdown, R, Rstudio y este libro `r emo::ji("slightly_smiling_face")`
+Todo es gratis y de código abierto, Bookdown, R, Rstudio y este libro `r wemoji("slightly_smiling_face")`
 
 Pueden revisar el detrás de escena de como fue generado el libro en bookdown, y como publicarlo en Amazon en:  [How to self-publish a book: A handy list of resources](https://blog.datascienceheroes.com/how-to-self-publish-a-book/) y [How to self publish a book: customizing Bookdown](https://blog.datascienceheroes.com/how-to-self-publish-a-book-customizing-bookdown/).
 
@@ -208,7 +209,7 @@ Foro de preguntas y respuestas de R en español: [Datos en R](https://datosenr.o
 
 <br>
 
-### ¿Cómo puedo contactar al autor? `r emo::ji("envelope_with_arrow")` {-}
+### ¿Cómo puedo contactar al autor? `r wemoji("envelope_with_arrow")` {-}
 
 Si quieren decir _hola_, contribuir comentando que alguna sección no está bien explicada, sugerir un nuevo tema o compartir una buena experiencia que tuvieron al aplicar algún concepto explicado aquí, pueden enviarme un e-mail a:
 
@@ -231,9 +232,9 @@ Además, pueden referirse a los repositorios de **Github** para ambos, el libro 
 
 Agradecimientos especiales a mis mentores en este mundo de los datos, Miguel Spindiak y Marcelo Ferreyra.
 
-Revisión técnica del libro: [Pablo Seibelt (aka The Sicarul)](https://www.linkedin.com/in/pabloseibelt) `r emo::ji("hammer_and_wrench")`. Gracias por tu ayuda sincera y desinteresada.
+Revisión técnica del libro: [Pablo Seibelt (aka The Sicarul)](https://www.linkedin.com/in/pabloseibelt) `r wemoji("hammer_and_wrench")`. Gracias por tu ayuda sincera y desinteresada.
 
-El arte de la tapa fue hecho por: [Bárbara Muñoz](https://www.linkedin.com/in/barbaramercedes/)`r emo::ji("art")`.
+El arte de la tapa fue hecho por: [Bárbara Muñoz](https://www.linkedin.com/in/barbaramercedes/)`r wemoji("art")`.
 
 Este libro está dedicado a _[Los nadies](https://holywaters.wordpress.com/2011/12/08/los-nadiesthe-nobodies-by-eduardo-galeano)_, un cuento corto escrito por Eduardo Galeano, y a mis padres.
 
